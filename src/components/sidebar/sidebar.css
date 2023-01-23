@@ -1,0 +1,12 @@
+.sidebar {
+  text-align: center;
+  font-style: italic;
+}
+
+.sidebar .rtl {
+  direction: rtl;
+}
+
+.theDay{
+  color: rgb(226 47 86);
+}
