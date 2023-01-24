@@ -22,9 +22,7 @@ const Customers = () => {
           <CustomerDataTable />
         </Grid>
         <Grid item xs={4}>
-          <Paper className={classes.pageContent}>
             <CustomerForm />
-          </Paper>
         </Grid>
       </Grid>
     </>

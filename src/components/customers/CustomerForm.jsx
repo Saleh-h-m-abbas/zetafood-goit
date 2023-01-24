@@ -1,70 +1,139 @@
-import {  makeStyles, TextField, InputLabel, Select, FormControl, Button, FormLabel } from '@material-ui/core'
-import React, { useState } from 'react'
+import React from "react";
+import { Formik, Form, Field } from "formik";
+import {
+  TextField,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Button,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "../../firebase";
 
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        '& .MuiFormControl-root': {
-            maxWidth: '1200px',
-            width: '100%',
-            margin: theme.spacing(0.5),
-            marginBottom: theme.spacing(2),
-            borderRadius: '5px',
-            backgroundColor: 'white',
-        },
-        '& .MuiFormLabel-root': {
-            left: 'inherit!important',
-            right: '1.75rem !important',
-            transformOrigin: 'right !important',
-        },
-        '& .MuiSvgIcon-root': {
-            left: '1.75rem !important',
-            right: 'inherit!important',
-            transformOrigin: 'right !important',
-        },
-        '& .MuiButtonBase-root': {
-            width: '80%',
-        },
-        '& .MuiSelect-root': {
-            direction: 'rtl'
-        },
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: "#326370",
+    padding: theme.spacing(4),
+    marginTop: "40px",
+    margin: "auto",
+    width: "100%",
+    borderRadius: "25px",
+    [theme.breakpoints.up("sm")]: {
+      width: "70%",
     },
-}))
+  },
+  line: {
+    borderBottom: "1px solid white",
+    margin: "10px 0",
+  },
+  title: {
+    color: "white",
+    direction: "rtl",
+    marginBottom: theme.spacing(2),
+  },
+  inputField: {
+    marginBottom: theme.spacing(2),
+    backgroundColor: "white",
+    direction: "rtl",
+  },
+  addButton: {
+    backgroundColor: "#F40057",
+    color: "white",
+    marginTop: theme.spacing(2),
+  },
+}));
 
-const CustomerForm = () => {
-    const [values, setValues] = useState("");
-    const classes = useStyles();
-    return (
-        <form className={classes.root} >
-            <FormLabel style={{ color: 'white', fontSize: '25px', direction: 'rtl' }} >إضافة زبون</FormLabel>
-            <hr />
-            <TextField
-                varient="outlined"
-                label="اسم المستخدم"
-                id="outlined-basic"
-                required
-                dir='rtl'
+const AddCustomer = () => {
+  const classes = useStyles();
+  const user = JSON.parse(localStorage.getItem("userInfo"));
+  return (
+    <div className={classes.root}>
+      <h2 className={classes.title}>اضافة زبون</h2>
+      <div className={classes.line}></div>
+      <Formik
+        initialValues={{ username: "", salesperson: "" }}
+        validate={(values) => {
+          const errors = {};
+          if (!values.username) {
+            errors.username = "يرجى تعبئة اسم السمتخدم";
+          }
+          if (!values.salesperson) {
+            errors.salesperson = "يرجى اختيار مسؤول المبيعات";
+          }
+          return errors;
+        }}
+        onSubmit={async (values, { setSubmitting }) => {
+          const newCityRef = await addDoc(collection(db, "customers"), {
+            name: values.username,
+            sales_manager_id: values.salesperson,
+            user_create: user.username,
+            createdAt: serverTimestamp(),
+          });
+          values.username = "";
+          values.salesperson = "";
+          setSubmitting(true);
+          await setDoc(newCityRef, { ...newCityRef,'uid':newCityRef.id});
+         
+        }}
+      >
+        {({ touched, errors, isSubmitting }) => (
+          <Form>
+            <Field
+              name="username"
+              as={TextField}
+              label="اسم المستخدم"
+              className={classes.inputField}
+              variant="standard"
+              helperText={touched.username ? errors.username : ""}
+              error={touched.username && Boolean(errors.username)}
+              fullWidth
             />
-            <FormControl variant="outlined" >
-                <InputLabel htmlFor="dataManager">اختيار مسؤول البيانات</InputLabel>
-                <Select
-                    required
-                    native
-                    label="dataManager"
-                >
-                    {/* Example data to be removed */}
-                    <option aria-label="None" value="" />
-                    <option value={"أحمد"}>أحمد</option>
-                    <option value={"محمد"}>محمد</option>
-                    <option value={"حسان"}>حسان</option>
-                </Select>
+            <FormControl
+              variant="standard"
+              className={classes.inputField}
+              fullWidth
+            >
+              <InputLabel id="salesperson-label">
+                {" "}
+                اختار مسؤول المبيعات{" "}
+              </InputLabel>
+              <Field
+                name="salesperson"
+                as={Select}
+                labelId="salesperson-label"
+                helperText={touched.salesperson ? errors.salesperson : ""}
+                error={touched.salesperson && Boolean(errors.salesperson)}
+                label="Salesperson"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value="1">Salesperson 1</MenuItem>
+                <MenuItem value="2">Salesperson 2</MenuItem>
+                <MenuItem value="3">Salesperson 3</MenuItem>
+              </Field>
             </FormControl>
-            <Button variant="contained" href="/" color="secondary" style={{ fontSize: '20px' }}>
-                إضافة
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              className={classes.addButton}
+              disabled={isSubmitting}
+            >
+              اضافة
             </Button>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
 
-        </form>
-    )
-}
-
-export default CustomerForm;
+export default AddCustomer;
