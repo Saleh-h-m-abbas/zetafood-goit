@@ -1,13 +1,13 @@
-export const smsMessageColumns = [
-  { field: "id", headerName: "ID", width: 200 },
-  { field: "number", headerName: "Phone Number", width: 150 },
-  { field: "smsTitle", headerName: "SMS Title", width: 200 },
-  { field: "sms", headerName: "SMS Message", width: 600 },
-  { field: "sender", headerName: "SMS Header", width: 150 },
-  { field: "email", headerName: "Sender Email", width: 150 },
+export const customerDatatable = [
+  { field: "id", headerName: "الرقم التعريفي", width: 200 },
+  { field: "name", headerName: "اسم الزبون", width: 300 },
+  { field: "sales_manager", headerName: "اسم مسؤول المبيعات", width: 200 },
+  // { field: "sms", headerName: "SMS Message", width: 600 },
+  // { field: "sender", headerName: "SMS Header", width: 150 },
+  // { field: "email", headerName: "Sender Email", width: 150 },
   {
     field: "createdAt",
-    headerName: "Created At",
+    headerName: "أنشئت في",
     width: 140,
     renderCell: (params) => {
       return (

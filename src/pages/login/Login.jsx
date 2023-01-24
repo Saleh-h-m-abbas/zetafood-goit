@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
-    padding: theme.spacing(2),
+    padding: theme.spacing(10),
     width: "50%",
     borderRadius: "10px",
     [theme.breakpoints.down("sm")]: {
@@ -56,12 +56,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     width: "50%",
     backgroundColor: "#e22f56",
+    color: 'white'
   },
   poweredBy: {
     color: "white",
     textAlign: "center",
     position: "absolute",
-    bottom: "30%",
+    bottom: "20%",
     width: "50%",
   },
 }));
