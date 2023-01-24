@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Button, makeStyles } from '@material-ui/core';
+<<<<<<< Updated upstream
 
 
 const columns = [
@@ -40,11 +41,32 @@ const rows = [
     { رقم: 10, الزبون: 'بلدنا للتجارة العامة', المبيعات: "يوسف" },
     { رقم: 10, الزبون: 'بلدنا للتجارة العامة', المبيعات: "يوسف" },
     { رقم: 10, الزبون: 'بلدنا للتجارة العامة', المبيعات: "يوسف" },
+=======
+import { UpdateButton } from '../buttons/UpdateButton';
+
+
+const columns = [
+    { id: 'تعديل', label: ' تعديل/حذف', minWidth: 100, align: 'right', },
+    { id: 'المبيعات', label: 'اسم مسؤول المبيعات', minWidth: 100, align: 'right', },
+    { id: 'الزبون', label: 'اسم الزبون', minWidth: 100, align: 'right', },
+    { id: 'رقم', label: 'رقم', minWidth: 20, align: 'right', },
+];
+//Example on data to be removed and replaced with data from backend
+const rows = [
+    { رقم: 10, الزبون: 'بلدنا للتجارة العامة', المبيعات: "يوسف", تعديل: <><UpdateButton /></>},
+{ رقم: 10, الزبون: 'بلدنا للتجارة العامة', المبيعات: "يوسف", تعديل: <><UpdateButton /></>},
+{ رقم: 10, الزبون: 'بلدنا للتجارة العامة', المبيعات: "يوسف", تعديل: <><UpdateButton /></>},
+
+>>>>>>> Stashed changes
 ];
 const CustomerDataTable = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(100);
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -55,7 +77,11 @@ const CustomerDataTable = () => {
         setPage(0);
     };
     return (
+<<<<<<< Updated upstream
         <Paper sx={{ width: '100%',  margin: "10px" , direction: 'rtl' }}>
+=======
+        <Paper sx={{ width: '100%', margin: "10px", direction: 'rtl' }}>
+>>>>>>> Stashed changes
             <h3>الزبائن</h3>
             <TableContainer sx={{ maxHeight: 960 }}>
                 <Table stickyHeader aria-label="sticky table">
