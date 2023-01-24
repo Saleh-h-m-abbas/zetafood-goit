@@ -104,6 +104,7 @@ const Login = () => {
     <div className={classes.root}>
       <Box className={classes.box}>
         <h1 className={classes.title}>ZetaFood</h1>
+        
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}

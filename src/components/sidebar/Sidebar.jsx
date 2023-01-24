@@ -37,9 +37,7 @@ export const Sidebar = () => {
     });
   };
 
-
   useEffect(() => {
-    
     if (currentDay == 0) {
       setTodayDay("الاحد");
     } else if (currentDay == 1) {
@@ -56,7 +54,7 @@ export const Sidebar = () => {
       setTodayDay("السبت");
     }
     handleButtonClick(todayDay);
-  }, [currentDay,todayDay]);
+  }, [currentDay, todayDay]);
 
   return (
     <>
@@ -69,12 +67,13 @@ export const Sidebar = () => {
             boxSizing: "border-box",
             bgcolor: "#003d4d",
             color: "white",
+            position: "none",
+            height: "100vh",
           },
         }}
         variant="permanent"
         anchor="right"
       >
-        <Toolbar />
         <List>
           <Typography id="today" className="sidebar">
             اليوم والتاريخ:
