@@ -46,7 +46,6 @@ const settings = [ {'name':"الصفحة الشخصية",'link':'/profile'},{'na
         direction: "rtl",
         display: "flex",
         overflow: "hidden",
-        mb: "20px",
       }}
     >
       <Container maxWidth="xl">

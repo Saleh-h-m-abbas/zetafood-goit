@@ -67,7 +67,7 @@ export const Sidebar = () => {
             boxSizing: "border-box",
             bgcolor: "#003d4d",
             color: "white",
-            position: "none",
+            position: "relative",
             height: "100vh",
           },
         }}
