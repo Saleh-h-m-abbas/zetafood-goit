@@ -12,51 +12,49 @@ function App() {
     return currentUser ? children : <Navigate to="/login" />;
   };
   return (
-    <div className={"app"}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/">
-            <Route path="login" element={<Login />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route path="login" element={<Login />} />
+          <Route
+            index
+            element={
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            }
+          />
+          <Route path="customers">
             <Route
               index
               element={
                 <RequireAuth>
-                  <Home />
+                  <Customers />
                 </RequireAuth>
               }
             />
-            <Route path="customers">
-              <Route
-                index
-                element={
-                  <RequireAuth>
-                    <Customers />
-                  </RequireAuth>
-                }
-              />
-            </Route>
-            <Route path="send">
-              <Route
-                index
-                element={<RequireAuth>{/* <SmsSendPage /> */}</RequireAuth>}
-              />
-            </Route>
-            <Route path="add">
-              <Route
-                index
-                element={<RequireAuth>{/* <SmsAddPage /> */}</RequireAuth>}
-              />
-            </Route>
-            <Route path="profile">
-              <Route
-                index
-                element={<RequireAuth><ProfilePage /></RequireAuth>}
-              />
-            </Route>
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+          <Route path="send">
+            <Route
+              index
+              element={<RequireAuth>{/* <SmsSendPage /> */}</RequireAuth>}
+            />
+          </Route>
+          <Route path="add">
+            <Route
+              index
+              element={<RequireAuth>{/* <SmsAddPage /> */}</RequireAuth>}
+            />
+          </Route>
+          <Route path="profile">
+            <Route
+              index
+              element={<RequireAuth><ProfilePage /></RequireAuth>}
+            />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

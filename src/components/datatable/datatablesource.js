@@ -11,7 +11,7 @@ export const smsMessageColumns = [
     width: 140,
     renderCell: (params) => {
       return (
-          <div>{`${params.row.createdAt?params.row.createdAt.toDate().toDateString(): ''}`}</div>
+        <div>{`${params.row.createdAt ? params.row.createdAt.toDate().toDateString() : ''}`}</div>
       );
     },
   },
@@ -28,10 +28,10 @@ export const smsColumns = [
     width: 200,
     renderCell: (params) => {
       return (
-          <div>{`${params.row.createdAt? params.row.createdAt?.toDate().toDateString() : ''}`}</div>
+        <div>{`${params.row.createdAt ? params.row.createdAt?.toDate().toDateString() : ''}`}</div>
       );
     },
-    
+
   },
 
 ];
@@ -39,18 +39,20 @@ export const usersColumns = [
   { field: "id", headerName: "ID", width: 250 },
   { field: "username", headerName: "Username", width: 150 },
   { field: "email", headerName: "Email", width: 200 },
-  { field: "role", headerName: "Role", width: 100,  renderCell: (params) => {
-    return (
-        <div>{`${params.row.role===0?'Root':params.row.role===1?'Admin':'User'}`}</div>
-    );
-  }, },
+  {
+    field: "role", headerName: "Role", width: 100, renderCell: (params) => {
+      return (
+        <div>{`${params.row.role === 0 ? 'Root' : params.row.role === 1 ? 'Admin' : 'User'}`}</div>
+      );
+    },
+  },
   {
     field: "createdAt",
     headerName: "Created At",
     width: 140,
     renderCell: (params) => {
       return (
-          <div>{`${params.row.createdAt?params.row.createdAt.toDate().toDateString(): ''}`}</div>
+        <div>{`${params.row.createdAt ? params.row.createdAt.toDate().toDateString() : ''}`}</div>
       );
     },
   },

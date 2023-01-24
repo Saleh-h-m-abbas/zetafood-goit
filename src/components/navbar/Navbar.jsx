@@ -11,13 +11,12 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { Link, useNavigate } from "react-router-dom";
+import {NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
-const pages = [" الرئيسية", "الزبائن"];
-const settings = ["الصفحة الشخصية", "تسجيل خروج"];
-
+const pages =[ {'name':'الرئيسية','link':'/'},{'name':'الزبائن','link':'/customers'}];
+const settings = [ {'name':"الصفحة الشخصية",'link':'/profile'},{'name': "تسجيل خروج",'link':'logout'}];
  const Navbar=()=> {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -101,38 +100,33 @@ const settings = ["الصفحة الشخصية", "تسجيل خروج"];
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography variant="h1" sx={{ textAlign: "center" }}>
-                    {page}
+                  <NavLink to={page.link}>
+                  <Typography variant="h6" sx={{ textAlign: "center" }}>
+                    {page.name}
                   </Typography>
+                  </NavLink>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
+     
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Link to="/">
-              <Button
-                onClick={handleCloseNavMenu}
+          {pages.map((page) => (
+                <Button
+                onClick={()=>navitage(page.link)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                الصفحة الرئيسية
+                {page.name}
               </Button>
-            </Link>
-            <Link to="/customers">
-              <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                الزبائن
-              </Button>
-            </Link>
+              ))}
+             
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="فتح">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Typography sx={{ my: 2, color: "white", marginLeft: 2 }}>
-                  {" "}
                   Admin
                 </Typography>
                 <Avatar src="/broken-image.jpg" />
@@ -154,12 +148,11 @@ const settings = ["الصفحة الشخصية", "تسجيل خروج"];
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={()=>navitage('/profile')}>
-                <Typography textAlign="center">الصفحة الشخصية</Typography>
-              </MenuItem>
-              <MenuItem onClick={() => dispatch({ type: "LOGOUT" })}>
-                <Typography textAlign="center">تسجيل الخروج</Typography>
-              </MenuItem>
+                {settings.map((setting) => (
+                    <MenuItem onClick={()=>{setting.link==='logout'?dispatch({ type: "LOGOUT" }):navitage(setting.link)}}>
+                    <Typography textAlign="center">{setting.name}</Typography>
+                  </MenuItem>
+              ))}
             </Menu>
           </Box>
         </Toolbar>

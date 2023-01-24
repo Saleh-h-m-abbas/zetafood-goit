@@ -1,144 +1,186 @@
-import { Button, Input, Select } from "@mui/material";
+import { Box, Button, Select, TextField } from "@mui/material";
 import React from "react";
-import { from } from "stylis";
-import { useFormik } from "formik";
-import { margin } from "@mui/system";
-import Typography from "@mui/material/Typography";
-import { InputAdornment } from "@mui/material";
 import Person2RoundedIcon from "@mui/icons-material/Person2Rounded";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
 import MenuItem from "@mui/material/MenuItem";
 import Navbar from "../../components/navbar/Navbar";
+import { makeStyles } from "@material-ui/core/styles";
+import { useNavigate } from "react-router-dom";
+import { InputAdornment } from "@mui/material";
+import EmailIcon from "@mui/icons-material/Email";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import * as Yup from "yup";
+import { Field, Form, Formik } from "formik";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: 'auto',
+    alignItems: "center",
+    justifyContent: "center",
+    direction: "rtl",
+  },
+
+  box: {
+    margin: 'auto',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#d9d9d9",
+    padding: theme.spacing(5),
+    width: "50%",
+    borderRadius: "40px",
+    [theme.breakpoints.down("sm")]: {
+      width: "50%",
+    },
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: 'space-around',
+    alignItems: "center",
+    height: '60vh',
+    width: "100%",
+  },
+  button: {
+    marginTop: theme.spacing(4),
+    width: "50%",
+    padding: '110px',
+    backgroundColor: "#e22f56",
+  },
+}));
 
 const ProfilePage = () => {
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      password: "",
-      authorizations: "",
-    },
-    onSubmit: (values) => {
-      console.log("formdata", values);
-    },
-    validate: (values) => {
-      let errors = {};
-      if (!values.name) {
-        errors.name = "يرجى تعبئة الاسم";
-      }
-
-      if (!values.password) {
-        errors.password = "يرجى تعبئة كلمة السر";
-      } else if (
-        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/i.test(
-          values.password
-        )
-      ) {
-        errors.password = "كلمة السر غير صالحة ";
-      }
-
-      if (!values.authorizations) {
-        errors.authorizations = "يرجى تعبئة الصلاحيات";
-      }
-
-      return errors;
-    },
-  });
-
-
+  const classes = useStyles();
+  const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
   return (
-    <div>
-        <Navbar />
-      <form
-        style={{
-          backgroundColor: "#d9d9d9",
-          borderRadius: "3%",
-          width: "30%",
-          margin: "0 auto",
-          padding: "1%",
-          marginTop: "5%",
-          direction: "rtl",
-        }}
-        onSubmit={formik.handleSubmit}
-      >
-        <Typography variant="h4" gutterBottom>
-          الصفحة الشخصية
-        </Typography>
-        <label htmlFor="name" style={{ marginBottom: "2px" }}>
-          اسم المستخدم
-        </label>
-        <br />
-        <Input
-          type="text"
-          id="name"
-          name="name"
-          onChange={formik.handleChange}
-          value={formik.values.name}
-          onBlur={formik.handleBlur}
-          style={{ backgroundColor: "white", marginTop: "2%" }}
-          fullWidth
-        />
-        {formik.touched.name && formik.errors.name ? (
-          <div style={{ color: "#e22f56" }}>{formik.errors.name}</div>
-        ) : null}
-        <br />
-        <br />
-        <label htmlFor="name">كلمة المرور </label>
-        <br />
-        <Input
-          type="password"
-          id="password"
-          name="password"
-          onChange={formik.handleChange}
-          value={formik.values.password}
-          onBlur={formik.handleBlur}
-          style={{ backgroundColor: "white", marginTop: "2%" }}
-          fullWidth
-        />
-        {formik.touched.password && formik.errors.password ? (
-          <div style={{ color: "#e22f56" }}>{formik.errors.password}</div>
-        ) : null}
-        <br />
-        <br />
+    <>
+      <Navbar />
+      <div className={classes.root}>
 
-        <label htmlFor="name">الصلاحيات </label>
-        <br />
-
-        {formik.touched.authorizations && formik.errors.authorizations ? (
-          <div style={{ color: "#e22f56" }}>{formik.errors.authorizations}</div>
-        ) : null}
-        <Select
-          name="authorizations"
-          id="authorizations"
-          fullWidth
-          style={{ backgroundColor: "white", height: "30px", marginTop: "2%" }}
-          onChange={formik.handleChange}
-          value={formik.values.authorizations}
-          onBlur={formik.authorizations}
-        >
-          <br />
-          <MenuItem value="auth1">صلاحية 1</MenuItem>
-          <MenuItem value="auth2">صلاحية 2</MenuItem>
-          <MenuItem value="auth3">صلاحية 3</MenuItem>
-          <MenuItem value="auth4">صلاحية 4</MenuItem>
-        </Select>
-
-        <br />
-        <br />
-
-        <Button
-          variant="text"
-          type="submit"
-          sx={{
-            backgroundColor: "#e22f56",
-            color: "white",
-            "&:hover": { backgroundColor: "#e22f56b8" },
+        <Formik
+          initialValues={{
+            name: "",
+            password: "",
+            email: "",
+            authorizations: "",
           }}
-          fullWidth
+          validationSchema={Yup.object({
+            name: Yup.string().required("يرجى تعبئة الاسم"),
+            password: Yup.string()
+              .required("يرجى تعبئة كلمة السر")
+              .matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/i,
+                "كلمة السر غير صالحة "
+              ),
+            email: Yup.string()
+              .required("يرجى تعبئة الايميل")
+              .email("الايميل غير صالح"),
+            authorizations: Yup.string().required("يرجى تعبئة الصلاحيات"),
+          })}
+          onSubmit={(values, { setSubmitting }) => {
+            console.log("formdata", values);
+            setSubmitting(false);
+            // Dispatch an action to save the user data to the store
+            dispatch({ type: "SAVE_USER_DATA", payload: values });
+            // Navigate to the homepage
+            navigate("/home");
+          }}
         >
-          حفظ التغيرات
-        </Button>
-      </form>
-    </div>
+          {({errors, touched, isSubmitting }) => (
+            <Box className={classes.box}>
+              <Form className={classes.form}>
+                <h1 className={classes.title}>الصفحة الشخصية</h1>
+
+                <Field
+                  variant="outlined"
+                  className={classes.input}
+                  as={TextField}
+                  type="text"
+                  name="name"
+                  label="اسم المستخدم"
+                  fullWidth
+                  helperText={touched.name ? errors.name : ""}
+                  error={touched.name && Boolean(errors.name)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Person2RoundedIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+
+                />
+                <Field
+                  variant="outlined"
+                  className={classes.input}
+                  type="password"
+                  name="password"
+                  as={TextField}
+                  label="كلمة المرور"
+                  helperText={touched.password ? errors.password : ""}
+                  error={touched.password && Boolean(errors.password)}
+                  fullWidth
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockRoundedIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Field
+                  variant="outlined"
+                  className={classes.input}
+                  type="email"
+                  as={TextField}
+                  name="email"
+                  label="الايميل"
+                  fullWidth
+                  helperText={touched.email ? errors.email : ""}
+                  error={touched.email && Boolean(errors.email)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Field
+                  variant="outlined"
+                  className={classes.input}
+                  as={Select}
+                  name="authorizations"
+                  label="الصلاحيات"
+                  fullWidth
+                  displayEmpty
+                >
+                  <MenuItem value="" disabled>
+                    الصلاحيات
+                  </MenuItem>
+                  <MenuItem value="admin">مدير</MenuItem>
+                  <MenuItem value="user">مستخدم</MenuItem>
+                </Field>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    fontSize: '20px',
+                    padding: '15px',
+                    backgroundColor: '#e22f56'
+                  }}
+                  className={`${classes.button} biggerSaveButton`}
+                  disabled={isSubmitting}
+                >
+                  حفظ التغييرات
+                </Button>
+              </Form>
+            </Box>
+          )}
+        </Formik>
+      </div>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import { Paper, makeStyles, Grid } from "@material-ui/core";
 import React from "react";
-import CustomerDataTable from "../components/CustomerDataTable";
-import CustomerForm from "../components/CustomerForm";
+import CustomerDataTable from "../../components/customers/CustomerDataTable";
+import CustomerForm from "../../components/customers/CustomerForm";
 import Navbar from "../../components/navbar/Navbar";
 
 const useStyles = makeStyles((theme) => ({

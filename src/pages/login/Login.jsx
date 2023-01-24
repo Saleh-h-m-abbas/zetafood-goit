@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   TextField,
@@ -11,7 +11,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
 import * as Yup from "yup";
 import { Field, Form, Formik } from "formik";
-import { doc, getDoc, getDocFromCache } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
@@ -78,13 +78,12 @@ const Login = () => {
         const user = userCredential.user;
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
-        
         if (docSnap.exists()) {
+          localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
           console.log("Document data:", docSnap.data());
         } else {
           console.log("No such document!");
         }
-        // localStorage.setItem("userInfo", JSON.stringify(3.data()));
         dispatch({ type: "LOGIN", payload: user });
         navitage("/");
       })
@@ -150,7 +149,6 @@ const Login = () => {
               <Button
                 className={classes.button}
                 variant="contained"
-                color="primary"
                 type="submit"
                 disabled={isSubmitting}
               >
