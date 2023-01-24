@@ -31,7 +31,7 @@ const CustomerDataTable = () => {
   }, []);
   const handleDelete = async (id) => {
     try {
-      await deleteDoc( doc(db, "sms", id));
+      await deleteDoc( doc(db, "customers", id));
       setData(data.filter((item) => item.id !== id));
     } catch (err) {
       console.log(err);
