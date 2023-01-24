@@ -6,14 +6,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import DialogTitle from '@mui/material/DialogTitle';
 
 
 export const UpdateButton = () => {
-
     const [open, setOpen] = useState(false);
-
     const handleClose = () => {
         setOpen(false)
     }

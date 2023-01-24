@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
   box: {
     margin: 'auto',
+    marginTop: '40px',
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#d9d9d9",
@@ -53,6 +54,7 @@ const ProfilePage = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
+  const user = JSON.parse(localStorage.getItem("userInfo"));
   return (
     <>
       <Navbar />
@@ -60,10 +62,10 @@ const ProfilePage = () => {
 
         <Formik
           initialValues={{
-            name: "",
+            name: user.username,
             password: "",
-            email: "",
-            authorizations: "",
+            email: user.email,
+            authorizations: user.role,
           }}
           validationSchema={Yup.object({
             name: Yup.string().required("يرجى تعبئة الاسم"),
@@ -148,6 +150,7 @@ const ProfilePage = () => {
                   }}
                 />
                 <Field
+                  
                   variant="outlined"
                   className={classes.input}
                   as={Select}
@@ -155,12 +158,14 @@ const ProfilePage = () => {
                   label="الصلاحيات"
                   fullWidth
                   displayEmpty
+                  disabled={user.role==='0'?true:false}
                 >
                   <MenuItem value="" disabled>
                     الصلاحيات
                   </MenuItem>
-                  <MenuItem value="admin">مدير</MenuItem>
-                  <MenuItem value="user">مستخدم</MenuItem>
+                  <MenuItem value="0">مدير</MenuItem>
+                  <MenuItem value="1">مشرف</MenuItem>
+                  <MenuItem value="2">مندوب</MenuItem>
                 </Field>
                 <Button
                   type="submit"

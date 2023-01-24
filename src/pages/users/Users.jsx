@@ -1,23 +1,23 @@
 import {Grid} from "@material-ui/core";
 import React from "react";
-import CustomerDataTable from "../../components/customers/CustomerDataTable";
-import CustomerForm from "../../components/customers/CustomerForm";
 import Navbar from "../../components/navbar/Navbar";
+import AddUser from "../../components/users/UserForm";
+import UserDataTable from "../../components/users/UserDataTable";
 
-const Customers = () => {
+const Users = () => {
   return (
     <>
       <Navbar />
       <Grid container>
         <Grid item xs={8}>
-          <CustomerDataTable />
+          <UserDataTable />
         </Grid>
         <Grid item xs={4}>
-            <CustomerForm />
+            <AddUser />
         </Grid>
       </Grid>
     </>
   );
 };
 
-export default Customers;
+export default Users;

@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import Customers from "./pages/customers/Customers";
 import ProfilePage from "./pages/profile/Profile";
+import Users from "./pages/users/Users";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -34,22 +35,18 @@ function App() {
               }
             />
           </Route>
-          <Route path="send">
-            <Route
-              index
-              element={<RequireAuth>{/* <SmsSendPage /> */}</RequireAuth>}
-            />
-          </Route>
-          <Route path="add">
-            <Route
-              index
-              element={<RequireAuth>{/* <SmsAddPage /> */}</RequireAuth>}
-            />
+
+          <Route path="users">
+            <Route index element={<RequireAuth>{<Users />}</RequireAuth>} />
           </Route>
           <Route path="profile">
             <Route
               index
-              element={<RequireAuth><ProfilePage /></RequireAuth>}
+              element={
+                <RequireAuth>
+                  <ProfilePage />
+                </RequireAuth>
+              }
             />
           </Route>
         </Route>

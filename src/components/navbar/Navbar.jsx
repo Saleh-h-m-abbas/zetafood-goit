@@ -15,9 +15,10 @@ import {NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
-const pages =[ {'name':'الرئيسية','link':'/'},{'name':'الزبائن','link':'/customers'}];
+const pages =[ {'name':'الرئيسية','link':'/'},{'name':'الزبائن','link':'/customers'},{'name':'المستخدمين','link':'/users'}];
 const settings = [ {'name':"الصفحة الشخصية",'link':'/profile'},{'name': "تسجيل خروج",'link':'logout'}];
  const Navbar=()=> {
+  const user = JSON.parse(localStorage.getItem("userInfo"));
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navitage = useNavigate();
@@ -126,7 +127,7 @@ const settings = [ {'name':"الصفحة الشخصية",'link':'/profile'},{'na
             <Tooltip title="فتح">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Typography sx={{ my: 2, color: "white", marginLeft: 2 }}>
-                  Admin
+                  {user.username}
                 </Typography>
                 <Avatar src="/broken-image.jpg" />
               </IconButton>
