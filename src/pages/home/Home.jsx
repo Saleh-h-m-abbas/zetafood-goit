@@ -8,11 +8,15 @@ import Box from "@mui/material/Box";
 import { Sidebar } from "../../components/sidebar/Sidebar";
 import { MenuItem, Select, TextField } from "@mui/material";
 import Navbar from "../../components/navbar/Navbar";
+import dayjs from 'dayjs';
 
 const Home = () => {
   const [delegate] = useState("اشرف");
   const [supervisor] = useState("قيس");
-
+  const date = new Date();
+  const [datePickerValue, setDatePickerValue] = useState(dayjs(date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()));
+  const user = JSON.parse(localStorage.getItem("userInfo"));
+ 
   const [value] = useState([
     {
       name: "yousef",
@@ -68,7 +72,7 @@ const Home = () => {
             <Typography sx={{ fontWeight: "bold" }}>
               <p>
                 اليوم والتاريخ:
-                {/* { day}/ {date} */}
+                {`  ${datePickerValue.$d.toLocaleString('en-us', {weekday: 'long'}) +"  " + datePickerValue.$d.getFullYear() + "-" + (datePickerValue.$d.getMonth()+1) + "-" + datePickerValue.$d.getDate()}`}
               </p>
               <p>المندوب: {delegate}</p>
               <p>المشرف: {supervisor}</p>
@@ -76,7 +80,8 @@ const Home = () => {
             <div className="buttonspace">
               <input type="submit" className="updateButton" value={"حفظ"} />
             </div>
-            <Table>
+          {user.days.includes(`${datePickerValue.$d.getFullYear()+ "-"+ (datePickerValue.$d.getMonth()+1)+"-" + datePickerValue.$d.getDate()}`) &&  
+             <Table>
               <thead>
                 <tr>
                   <StyledTableCell align="right">اسم الزبون </StyledTableCell>
@@ -163,9 +168,9 @@ const Home = () => {
                   </tr>
                 </tbody>
               ))}
-            </Table>
+            </Table>}
           </Box>
-          <Sidebar />
+          <Sidebar datePickerValue={datePickerValue}  setDatePickerValue={setDatePickerValue} />
         </Box>
       </form>
     </>
