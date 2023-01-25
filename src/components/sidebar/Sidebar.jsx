@@ -1,16 +1,27 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import * as React from "react";
 import "./sidebar.css";
 import Drawer from "@mui/material/Drawer";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import Toolbar from "@mui/material/Toolbar";
-import ListItemText from "@mui/material/ListItemText";
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Grid from '@mui/material/Grid';
+import { CalendarPicker } from '@mui/x-date-pickers/CalendarPicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Directions } from "@mui/icons-material";
+
+
+
+const isWeekend = (date) => {
+  const day = date.day();
+
+  return day === 5;
+};
 
 export const Sidebar = () => {
-  const drawerWidth = 150;
+  const drawerWidth = 320;
   const [days] = useState([
     "السبت",
     "الاحد",
@@ -27,6 +38,7 @@ export const Sidebar = () => {
   const currentDay = date.getDay();
   const currentDate = date.toDateString();
   const [todayDay, setTodayDay] = useState("");
+  const [value, setValue] = React.useState(dayjs('2022-04-07'));
 
   const handleButtonClick = (day) => {
     setClickedDay({
@@ -58,53 +70,34 @@ export const Sidebar = () => {
 
   return (
     <>
-      <Drawer
+      <div
         sx={{
           width: drawerWidth,
-          flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: "border-box",
-            bgcolor: "#003d4d",
-            color: "white",
             position: "relative",
             height: "100vh",
+            display: 'flex',
+            flexDirection:'column',
           },
         }}
         variant="permanent"
         anchor="right"
       >
-        <List>
-          <Typography id="today" className="sidebar">
-            اليوم والتاريخ:
-          </Typography>
-          <Typography id="today" className="sidebar">
-            <span className="theDay">{clickedDay.date}</span>
-          </Typography>
-          <div>
-            {days.map((day, i) => (
-              <>
-                <Divider />
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemText
-                      sx={{
-                        textAlign: "center",
-                        fontStyle: "italic",
-                      }}
-                      key={day}
-                      onClick={() => handleButtonClick(day)}
-                    >
-                      {day}
-                    </ListItemText>
-                  </ListItemButton>
-                </ListItem>
-                <Divider />
-              </>
-            ))}
-          </div>
-        </List>
-      </Drawer>
+            <Grid >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Grid sx={{
+                mt:'10px',
+              borderRadius:'25px'
+            }} bgcolor={'#56a7bc'}>
+                <CalendarPicker
+                  openTo="day"
+                  shouldDisableDate={isWeekend}
+                  value={value} onChange={(newDate) => setValue(newDate)} />
+              </Grid>
+            </LocalizationProvider>
+          </Grid>
+      </div>
     </>
   );
 };
