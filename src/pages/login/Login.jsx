@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -21,20 +21,22 @@ import { AuthContext } from "../../context/AuthContext";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     height: "100vh",
     backgroundColor: "#003d4d",
     direction: "rtl",
   },
   box: {
+    height: "30vh",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
     padding: theme.spacing(10),
-    width: "50%",
+    width: "40%",
     borderRadius: "10px",
     [theme.breakpoints.down("sm")]: {
       width: "90%",
@@ -53,17 +55,14 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   button: {
-    marginTop: theme.spacing(2),
-    width: "50%",
+    marginTop: theme.spacing(3),
+    width: "60%",
     backgroundColor: "#e22f56",
-    color: 'white'
+    color: "white",
   },
   poweredBy: {
     color: "white",
-    textAlign: "center",
-    position: "absolute",
-    bottom: "20%",
-    width: "50%",
+    fontSize: "20px",
   },
 }));
 
@@ -71,6 +70,7 @@ const Login = () => {
   const classes = useStyles();
   const navitage = useNavigate();
   const { dispatch } = useContext(AuthContext);
+  const [loginError, setLoginError] = useState("");
   const handleSubmit = (e) => {
     // e.preventDefault();
     signInWithEmailAndPassword(auth, e.email, e.password)
@@ -89,14 +89,12 @@ const Login = () => {
         navitage("/");
       })
       .catch((error) => {
-        // setError(true);
-        console.log(error);
+        setLoginError("Something Wrong Please Try Again");
+        // console.log(error);
       });
   };
   const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("ايميل غير صحيح")
-      .required("يجب ادخال الايميل"),
+    email: Yup.string().email("ايميل غير صحيح").required("يجب ادخال الايميل"),
     password: Yup.string().required("يجب ادخال كلمة المرور"),
   });
 
@@ -104,7 +102,7 @@ const Login = () => {
     <div className={classes.root}>
       <Box className={classes.box}>
         <h1 className={classes.title}>ZetaFood</h1>
-        
+
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}
@@ -151,17 +149,20 @@ const Login = () => {
                 className={classes.button}
                 variant="contained"
                 type="submit"
-                disabled={isSubmitting}
               >
                 تسجيل الدخول
               </Button>
+
+              <div style={{ color: "red", marginTop: "30px" }}>
+                {loginError !== "" && loginError}
+              </div>
             </Form>
           )}
         </Formik>
-        <Typography className={classes.poweredBy} variant="body2">
-          Powered by GoIT
-        </Typography>
       </Box>
+      <Typography className={classes.poweredBy} variant="body2">
+        Powered by GoIT
+      </Typography>
     </div>
   );
 };
