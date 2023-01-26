@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AddUser = () => {
   const classes = useStyles();
-  const user = JSON.parse(localStorage.getItem("userInfo"));
+  
   return (
     <div className={classes.root}>
       <h2 className={classes.title}>اضافة مستخدم</h2>
@@ -83,12 +83,15 @@ const AddUser = () => {
             const user = userCredential.user;
             console.log(user.uid);
             await addDoc(collection(db, "users"), {
+              createdAt: serverTimestamp(),
+              customerListByDay: [],
+              days:[],
               email: user.email,
+              role: values.role,
+              superId: '',
+              superName: '',
               uid: user.uid,
               username: values.username,
-              role: values.role,
-              createdAt: serverTimestamp(),
-              days: []
             });
             values.username = "";
             values.email = "";
@@ -149,7 +152,7 @@ const AddUser = () => {
                 error={touched.role && Boolean(errors.role)}
                 label="role"
               >
-                {/* <MenuItem value={0}>مدير</MenuItem> */}
+                <MenuItem value={0}>مدير مبيعات</MenuItem>
                 <MenuItem value={1}>مشرف</MenuItem>
                 <MenuItem value={2}>مندوب</MenuItem>
               </Field>

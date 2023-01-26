@@ -12,6 +12,7 @@ import { Button } from "@material-ui/core";
 const Home = () => {
   const date = new Date();
   const [datePickerValue, setDatePickerValue] = useState(dayjs(date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()));
+  const user = JSON.parse(localStorage.getItem("userInfo"));
 
   const [value] = useState([
     {

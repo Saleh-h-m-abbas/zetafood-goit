@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import {
   TextField,
@@ -12,8 +12,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   addDoc,
   collection,
+  getDocs,
+  query,
   serverTimestamp,
   setDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 
@@ -53,6 +56,21 @@ const useStyles = makeStyles((theme) => ({
 const AddCustomer = () => {
   const classes = useStyles();
   const user = JSON.parse(localStorage.getItem("userInfo"));
+  const [usersList, setUsersList] = useState([]);
+
+  const getSales = async () => {
+    const userArray = [];
+    const q = query(collection(db, "users"), where("role", "==", 1));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      userArray.push({ id: doc.data().uid, name: doc.get("username") });
+    });
+    console.log(userArray);
+    setUsersList(userArray);
+  };
+  useEffect(()=>{
+    getSales();
+  },[])
   return (
     <div className={classes.root}>
       <h2 className={classes.title}>اضافة زبون</h2>
@@ -111,13 +129,11 @@ const AddCustomer = () => {
                 helperText={touched.salesperson ? errors.salesperson : ""}
                 error={touched.salesperson && Boolean(errors.salesperson)}
                 label="Salesperson"
+                disabled={usersList.length === 0}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="1">Salesperson 1</MenuItem>
-                <MenuItem value="2">Salesperson 2</MenuItem>
-                <MenuItem value="3">Salesperson 3</MenuItem>
+                {usersList.map((values)=><MenuItem value={values.id}>{values.name}</MenuItem>)}
+                
+      
               </Field>
             </FormControl>
             <Button
@@ -125,7 +141,7 @@ const AddCustomer = () => {
               variant="contained"
               fullWidth
               className={classes.addButton}
-              disabled={isSubmitting}
+              // disabled={isSubmitting}
             >
               اضافة
             </Button>

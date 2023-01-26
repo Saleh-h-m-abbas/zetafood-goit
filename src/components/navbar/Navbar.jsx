@@ -54,6 +54,7 @@ export default function Navbar() {
   const open = Boolean(anchorEl);
   const navitage = useNavigate();
   const { dispatch } = useContext(AuthContext);
+  const user = JSON.parse(localStorage.getItem("userInfo"));
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -86,13 +87,13 @@ export default function Navbar() {
                 المستخدمين
               </Button>
             </Link>
-            <Link to="/usersInfo" className={classes.link}>
+            <Link to="/userInfo" className={classes.link}>
               <Button className={classes.button}>
                 تحديد الزبائن
               </Button>
             </Link>
           </Typography>
-          <Typography >Admin</Typography>
+          <Typography >{user.username}</Typography>
           <div>
             <IconButton
               aria-label="account of current user"
