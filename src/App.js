@@ -6,6 +6,7 @@ import { AuthContext } from "./context/AuthContext";
 import Customers from "./pages/customers/Customers";
 import ProfilePage from "./pages/profile/Profile";
 import Users from "./pages/users/Users";
+import UserInfo from "./pages/users/UserInfo";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -37,7 +38,10 @@ function App() {
           </Route>
 
           <Route path="users">
-            <Route index element={<RequireAuth>{<Users />}</RequireAuth>} />
+            <Route index element={<RequireAuth><Users /></RequireAuth>} />
+          </Route>
+          <Route path="userinfo">
+            <Route index element={<RequireAuth><UserInfo /></RequireAuth>} />
           </Route>
           <Route path="profile">
             <Route
