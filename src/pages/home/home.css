@@ -3,12 +3,16 @@
   padding: 2px 5px;
   border-radius: 25px;
   color: #ffff;
-  border: 1px dotted rgba(220, 20, 60, 0.6);
+  border: 1px dotted #dc143c99;
   cursor: pointer;
-  height: 4.5vh;
-  width: 14vh;
+  height: 6.5vh;
+  width: 16vh;
   margin: 3px;
   font-size: 3.5vh;
+}
+.AddButton {
+   background-color: rgb(226 47 86);
+    color: "white";
 }
 
 .buttonspace {
@@ -72,3 +76,4 @@ td {
   transition: all 0.2s ease;
   direction: rtl;
 }
+

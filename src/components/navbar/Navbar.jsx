@@ -7,8 +7,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,24 +31,29 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     textDecoration: "none",
     "&:hover": {
-      color: "#ffc107",
+      color: "white",
     },
   },
   button: {
     marginRight: theme.spacing(2),
-    background: "#ffc107",
     color: "white",
     fontWeight: "bold",
     "&:hover": {
-      background: "#ffa000",
+      background: "#f40057"
     },
   },
+  IconButton: {
+    fontSize: '100%',
+  }
 }));
 
 export default function Navbar() {
+  const settings = [{ 'name': "الصفحة الشخصية", 'link': '/profile' }, { 'name': "تسجيل خروج", 'link': 'logout' }];
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const navitage = useNavigate();
+  const { dispatch } = useContext(AuthContext);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -64,22 +71,28 @@ export default function Navbar() {
             <Link to="/" className={classes.link}>
               ZetaFood
             </Link>
+            <Link to="/" className={classes.link}>
+              <Button className={classes.button}>
+                الرئيسية
+              </Button>
+            </Link>
+            <Link to="/customers" className={classes.link}>
+              <Button className={classes.button}>
+                الزبائن
+              </Button>
+            </Link>
+            <Link to="/users" className={classes.link}>
+              <Button className={classes.button}>
+                المستخدمين
+              </Button>
+            </Link>
+            <Link to="/usersInfo" className={classes.link}>
+              <Button className={classes.button}>
+                تحديد الزبائن
+              </Button>
+            </Link>
           </Typography>
-          <Button className={classes.button}>
-            <Link to="/page1" className={classes.link}>
-              Page 1
-            </Link>
-          </Button>
-          <Button className={classes.button}>
-            <Link to="/page2" className={classes.link}>
-              Page 2
-            </Link>
-          </Button>
-          <Button className={classes.button}>
-            <Link to="/page3" className={classes.link}>
-              Page 3
-            </Link>
-          </Button>
+          <Typography >Admin</Typography>
           <div>
             <IconButton
               aria-label="account of current user"
@@ -87,7 +100,7 @@ export default function Navbar() {
               aria-haspopup="true"
               onClick={handleMenu}
               color="inherit"
-            >
+              className={classes.IconButton}>
               <AccountCircleIcon />
             </IconButton>
             <Menu
@@ -105,8 +118,11 @@ export default function Navbar() {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
+              {settings.map((setting) => (
+                <MenuItem onClick={() => { setting.link === 'logout' ? dispatch({ type: "LOGOUT" }) : navitage(setting.link) }}>
+                  <Typography textAlign="center">{setting.name}</Typography>
+                </MenuItem>
+              ))}
             </Menu>
           </div>
         </Toolbar>
