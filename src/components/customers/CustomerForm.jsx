@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   addDoc,
   collection,
+  doc,
   getDocs,
   query,
   serverTimestamp,
@@ -60,7 +61,7 @@ const AddCustomer = () => {
 
   const getSales = async () => {
     const userArray = [];
-    const q = query(collection(db, "users"), where("role", "==", 1));
+    const q = query(collection(db, "users"), where("role", "==", 2));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       userArray.push({ id: doc.data().uid, name: doc.get("username") });
@@ -88,17 +89,19 @@ const AddCustomer = () => {
           return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
-          const newCityRef = await addDoc(collection(db, "customers"), {
+          const addCustomer = await addDoc(collection(db, "customers"), {
+            createdAt: serverTimestamp(),
             name: values.username,
             sales_manager_id: values.salesperson,
+            sales_manager_name: usersList.find((e)=>e.id === values.salesperson ).name,
             user_create: user.username,
-            createdAt: serverTimestamp(),
           });
           values.username = "";
           values.salesperson = "";
           setSubmitting(true);
-          await setDoc(newCityRef, { ...newCityRef,'uid':newCityRef.id});
-         
+          await setDoc(doc(db, "customers", addCustomer.id), {
+            uid: addCustomer.id
+          },{ merge: true });
         }}
       >
         {({ touched, errors, isSubmitting }) => (
@@ -119,8 +122,7 @@ const AddCustomer = () => {
               fullWidth
             >
               <InputLabel id="salesperson-label">
-                {" "}
-                اختار مسؤول المبيعات{" "}
+                اختار مسؤول المبيعات
               </InputLabel>
               <Field
                 name="salesperson"

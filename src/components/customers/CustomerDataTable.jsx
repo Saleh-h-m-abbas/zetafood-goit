@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { customerDatatable } from "../datatable/datatablesource";
+import { PopupMessage } from "../datatable/PopupMessage";
 
 const CustomerDataTable = () => {
   const [data, setData] = useState([]);
@@ -52,7 +53,7 @@ const CustomerDataTable = () => {
             >
               Delete
             </div>
-            {/* <PopupMessage /> */}
+            <PopupMessage />
           </div>
         );
       },

@@ -25,7 +25,6 @@ import {
   arrayUnion,
   setDoc,
   getDoc,
-  arrayRemove,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 

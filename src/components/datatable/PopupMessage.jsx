@@ -105,8 +105,8 @@ export const PopupMessage = () => {
                                             fullWidth
                                         >
                                             <InputLabel id="salesperson-label">
-                                                {" "}
-                                                اختار مسؤول المبيعات{" "}
+                                                
+                                                اختار مسؤول المبيعات
                                             </InputLabel>
                                             <Field
                                                 name="salesperson"

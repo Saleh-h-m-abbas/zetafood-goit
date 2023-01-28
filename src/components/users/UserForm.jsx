@@ -9,12 +9,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -53,13 +48,13 @@ const useStyles = makeStyles((theme) => ({
 
 const AddUser = () => {
   const classes = useStyles();
-  
+
   return (
     <div className={classes.root}>
       <h2 className={classes.title}>اضافة مستخدم</h2>
       <div className={classes.line}></div>
       <Formik
-        initialValues={{ username: "",email: "", password:"", role: "" }}
+        initialValues={{ username: "", email: "", password: "", role: "" }}
         validate={(values) => {
           const errors = {};
           if (!values.username) {
@@ -77,32 +72,30 @@ const AddUser = () => {
           return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
-            setSubmitting(true);
+          setSubmitting(true);
           createUserWithEmailAndPassword(auth, values.email, values.password)
-          .then(async (userCredential) => {
-            const user = userCredential.user;
-            console.log(user.uid);
-            await addDoc(collection(db, "users"), {
-              createdAt: serverTimestamp(),
-              customerListByDay: [],
-              days:[],
-              email: user.email,
-              role: values.role,
-              superId: '',
-              superName: '',
-              uid: user.uid,
-              username: values.username,
+            .then(async (userCredential) => {
+              const user = userCredential.user;
+              await setDoc(doc(db, "users", user.uid), {
+                createdAt: serverTimestamp(),
+                customerListByDay: [],
+                days: [],
+                email: user.email,
+                role: values.role,
+                superId: "",
+                superName: "",
+                uid: user.uid,
+                username: values.username,
+              });
+              values.username = "";
+              values.email = "";
+              values.password = "";
+              values.role = "";
+              setSubmitting(false);
+            })
+            .catch((error) => {
+              console.log(error);
             });
-            values.username = "";
-            values.email = "";
-            values.password = "";
-            values.role = "";
-            setSubmitting(false);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
- 
         }}
       >
         {({ touched, errors, isSubmitting }) => (

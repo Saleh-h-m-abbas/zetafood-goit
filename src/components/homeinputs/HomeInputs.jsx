@@ -1,17 +1,14 @@
 import {
   TextField,
-  NativeSelect,
-  InputLabel,
   Stack,
   Select,
   MenuItem,
   Grid,
 } from "@mui/material";
-import { React, useState, useEffect } from "react";
+import { React} from "react";
 
 function HomeInputs({ datePickerValue }) {
-  const [delegate] = useState("اشرف");
-  const [supervisor] = useState("قيس");
+
   const user = JSON.parse(localStorage.getItem("userInfo"));
   return (
     <>

@@ -10,8 +10,13 @@ import UserInfo from "./pages/users/UserInfo";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
+  const user = JSON.parse(localStorage.getItem("userInfo"));
   const RequireAuth = ({ children }) => {
     return currentUser ? children : <Navigate to="/login" />;
+  };
+
+  const AdminAuth = ({ children }) => {
+    return user.role === 0 ? children : <Navigate to="/" />;
   };
   return (
     <BrowserRouter>
@@ -31,17 +36,37 @@ function App() {
               index
               element={
                 <RequireAuth>
-                  <Customers />
+                  <AdminAuth>
+                    <Customers />
+                  </AdminAuth>
                 </RequireAuth>
               }
             />
           </Route>
 
           <Route path="users">
-            <Route index element={<RequireAuth><Users /></RequireAuth>} />
+            <Route
+              index
+              element={
+                <RequireAuth>
+                  <AdminAuth>
+                    <Users />
+                  </AdminAuth>
+                </RequireAuth>
+              }
+            />
           </Route>
           <Route path="userinfo">
-            <Route index element={<RequireAuth><UserInfo /></RequireAuth>} />
+            <Route
+              index
+              element={
+                <RequireAuth>
+                  <AdminAuth>
+                    <UserInfo />
+                  </AdminAuth>
+                </RequireAuth>
+              }
+            />
           </Route>
           <Route path="profile">
             <Route
