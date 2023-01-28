@@ -1,4 +1,3 @@
-import { PopupMessage } from "../datatable/PopupMessage";
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
