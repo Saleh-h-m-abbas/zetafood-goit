@@ -83,7 +83,7 @@ const handleSelect = (e, index, key) => {
                       fullWidth
                       name="customerName"
                       variant="filled"
-                      value={item.customerName}
+                      defaultValue={item.customerName}
                       onInput={(e) => handleChange(e, index, "customerName")}
                     />
                   </td>
@@ -93,7 +93,7 @@ const handleSelect = (e, index, key) => {
                   <td>
                     <Select
                       variant="filled"
-                      value={item.customerVisit}
+                      defaultValue={item.customerVisit}
                       name="customerVisit"
                       onChange={(e) => handleSelect(e, index, "customerVisit")}
                       style={{ width: "100%" }}
@@ -105,7 +105,7 @@ const handleSelect = (e, index, key) => {
                   <td>
                     <Select
                       variant="filled"
-                      value={item.visitGoal}
+                      defaultValue={item.visitGoal}
                       name="visitGoal"
                       onChange={(e) => handleSelect(e, index, "visitGoal")}
                       style={{ width: "100%" }}
@@ -121,7 +121,7 @@ const handleSelect = (e, index, key) => {
                       multiline
                       maxRows={4}
                       name="note"
-                      value={item.note}
+                      defaultValue={item.note}
                       onChange={(e) => handleSelect(e, index, "note")}
                     />
                   </td>
