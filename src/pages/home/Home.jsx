@@ -20,6 +20,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import SelectedCustomerDataTable from "../../components/datatable/SelectedCustomerDataTable";
+import CustomAlert from "./CustomAlert";
 const Home = () => {
   const date = new Date();
   const [customersList, setCustomersList] = useState([]);
@@ -34,7 +35,7 @@ const Home = () => {
     (datePickerValue.$d.getMonth() + 1) +
     "-" +
     datePickerValue.$d.getDate();
-  const user = JSON.parse(localStorage.getItem("userInfo"));
+  const [user,setUser] = useState(JSON.parse(localStorage.getItem("userInfo")));
   var days = [
     "Sunday",
     "Monday",
@@ -47,7 +48,7 @@ const Home = () => {
 
   useEffect(() => {
     getCustomers();
-  },[]);
+  }, []);
   const getCustomers = async () => {
     const userArray = [];
     const q = query(collection(db, "customers"));
@@ -98,6 +99,7 @@ const Home = () => {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
+        setUser(JSON.parse(localStorage.getItem("userInfo")));
         console.log("Document data:", docSnap.data());
       } else {
         console.log("No such document!");
@@ -116,7 +118,7 @@ const Home = () => {
             <HomeInputs datePickerValue={datePickerValue} />
           </Typography>
           {user.days.includes(todayDateSelected) ? (
-            <SelectedCustomerDataTable todayDateSelected={todayDateSelected}  />
+            <SelectedCustomerDataTable todayDateSelected={todayDateSelected} />
           ) : (
             <Box mt={5}>
               <Button

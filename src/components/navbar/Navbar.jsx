@@ -77,6 +77,8 @@ export default function Navbar() {
                 الرئيسية
               </Button>
             </Link>
+            {user.role === 0 && 
+            <>
             <Link to="/customers" className={classes.link}>
               <Button className={classes.button}>
                 الزبائن
@@ -92,6 +94,8 @@ export default function Navbar() {
                 تحديد الزبائن
               </Button>
             </Link>
+            </>
+            }
           </Typography>
           <Typography >{user.username}</Typography>
           <div>

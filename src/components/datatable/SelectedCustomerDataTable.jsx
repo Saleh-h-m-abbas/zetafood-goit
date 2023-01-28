@@ -10,12 +10,15 @@ import {
   TextField,
 } from "@mui/material";
 
-import { collection, getDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db } from "../../firebase";
+import CustomAlert from "../../pages/home/CustomAlert";
 
 const SelectedCustomerDataTable = ({ todayDateSelected }) => {
   const user = JSON.parse(localStorage.getItem("userInfo"));
   const [isLoading, setIsLoading] = useState(true);
+  const [isAlert, setIsAlert] = useState(false);
+  const [visitId, setVisitID] = useState('');
   const [valuesForSelectedDay,setValuesForSelectedDay] = useState([]);
 
   const handleChange = (e, index, key) => {
@@ -27,9 +30,18 @@ const handleSelect = (e, index, key) => {
     const newData = [...valuesForSelectedDay];
     newData[index][key] = e.target.value;
 };
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log({ valuesForSelectedDay });
+    console.log( valuesForSelectedDay );
+    console.log( visitId );
+    await setDoc( doc (db, "visitInformation", visitId), {
+      listOfCustomers: valuesForSelectedDay
+    },{ merge: true });
+    setIsAlert(true);
+    const timer = setTimeout(() => {
+      setIsAlert(false);
+    }, 3000);
+    return () => clearTimeout(timer);
   };
 
   useEffect(()=>{
@@ -41,6 +53,7 @@ const handleSelect = (e, index, key) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       setValuesForSelectedDay(doc.data().listOfCustomers);
+      setVisitID(doc.id);
     });
     setIsLoading(false);
   } catch (error) {
@@ -49,6 +62,10 @@ const handleSelect = (e, index, key) => {
   }
   return (
     <>
+    <div>
+{ isAlert &&    <CustomAlert severity="success"> تم تخزين البيانات بنجاح </CustomAlert>
+}
+    
       {isLoading ? (
         <Stack
           direction="row"
@@ -131,6 +148,7 @@ const handleSelect = (e, index, key) => {
           </Table>
         </form>
       )}
+      </div>
     </>
   );
 };
