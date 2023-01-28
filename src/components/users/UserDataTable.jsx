@@ -9,8 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { userDatatable } from "../datatable/datatablesource";
-import { UpdateSalaryButton } from "../datatable/UpdateSalaryButton";
-import { PopupMessageUsers } from "../datatable/PopupMessageUsers";
+import { UpdateModelUsers } from "../model/UpdateModelUsers";
 
 const UserDataTable = () => {
   const [data, setData] = useState([]);
@@ -53,8 +52,7 @@ const UserDataTable = () => {
             >
               Delete
             </div>
-            <PopupMessageUsers />
-            <UpdateSalaryButton />
+            <UpdateModelUsers />
           </div>
         );
       },

@@ -1,7 +1,6 @@
 export const customerDatatable = [
   { field: "id", headerName: "الرقم التعريفي", width: 200 },
   { field: "name", headerName: "اسم الزبون", width: 300 },
-  // TODO:: Replace ID with Name
   { field: "sales_manager_name", headerName: "اسم مسؤول المبيعات", width: 200 },
   {
     field: "createdAt",

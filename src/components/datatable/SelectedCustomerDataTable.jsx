@@ -17,8 +17,8 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import CustomAlert from "../Actions/CustomAlert";
-import { CustomLoading } from "../Actions/CustomLoading";
+import CustomAlert from "../actions/CustomAlert";
+import { CustomLoading } from "../actions/CustomLoading";
 
 const SelectedCustomerDataTable = ({ todayDateSelected }) => {
   const user = JSON.parse(localStorage.getItem("userInfo"));
@@ -54,6 +54,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected }) => {
 
   useEffect(() => {
     getSelectedDayData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const getSelectedDayData = async () => {
     try {

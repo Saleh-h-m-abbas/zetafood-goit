@@ -20,7 +20,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import SelectedCustomerDataTable from "../../components/datatable/SelectedCustomerDataTable";
-import { CustomLoading } from "../../components/Actions/CustomLoading";
+import { CustomLoading } from "../../components/actions/CustomLoading";
 const Home = () => {
   const date = new Date();
   const [customersList, setCustomersList] = useState([]);

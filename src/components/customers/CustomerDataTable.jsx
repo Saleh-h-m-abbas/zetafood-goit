@@ -1,4 +1,3 @@
-
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
@@ -9,9 +8,9 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { db } from "../../firebase";
+import { UpdateSalaryButton } from "../buttons/UpdateSalaryButton";
 import { customerDatatable } from "../datatable/datatablesource";
-import { PopupMessage } from "../datatable/PopupMessage";
-import { UpdateSalaryButton } from "../datatable/UpdateSalaryButton";
+import { UpdateModelCustomers } from "../model/UpdateModelCustomers";
 
 const CustomerDataTable = () => {
   const [data, setData] = useState([]);
@@ -44,18 +43,18 @@ const CustomerDataTable = () => {
     {
       field: "action",
       headerName: "تعديل / حذف",
-      width: 250,
+      width: 300,
       renderCell: (params) => {
         return (
           <div className="cellAction">
+            <UpdateSalaryButton />
+            <UpdateModelCustomers />
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row.id)}
             >
               Delete
             </div>
-            <PopupMessage />
-            <UpdateSalaryButton />
           </div>
         );
       },

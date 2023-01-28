@@ -60,7 +60,7 @@ export const UpdateSalaryButton = () => {
                 className="deleteButton"
                 onClick={() => handleOpen()}
             >
-                Salary
+                تحديث الهدف الشهري
             </div>
 
                 <Dialog

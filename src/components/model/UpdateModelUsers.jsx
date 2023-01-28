@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export const PopupMessageUsers = () => {
+export const UpdateModelUsers = () => {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
 
