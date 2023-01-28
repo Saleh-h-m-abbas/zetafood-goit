@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import * as React from "react";
 import "./sidebar.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";

@@ -81,16 +81,12 @@ const Login = () => {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
-          console.log("Document data:", docSnap.data());
-        } else {
-          console.log("No such document!");
-        }
+        } 
         dispatch({ type: "LOGIN", payload: user });
         navitage("/");
       })
       .catch((error) => {
         setLoginError("Something Wrong Please Try Again");
-        // console.log(error);
       });
   };
   const validationSchema = Yup.object().shape({

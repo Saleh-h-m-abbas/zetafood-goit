@@ -88,7 +88,6 @@ function UserInfo() {
   const [usersList, setUsersList] = useState([]);
   const [customersList, setCustomersList] = useState([]);
   const [nameValue, setNameValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [save,setSave]=useState('');
 
   const getUsers = async () => {

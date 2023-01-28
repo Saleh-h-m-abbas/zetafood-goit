@@ -66,7 +66,6 @@ const AddCustomer = () => {
     querySnapshot.forEach((doc) => {
       userArray.push({ id: doc.data().uid, name: doc.get("username") });
     });
-    console.log(userArray);
     setUsersList(userArray);
   };
   useEffect(()=>{

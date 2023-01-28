@@ -81,7 +81,6 @@ const ProfilePage = () => {
             authorizations: Yup.string().required("يرجى تعبئة الصلاحيات"),
           })}
           onSubmit={(values, { setSubmitting }) => {
-            console.log("formdata", values);
             setSubmitting(false);
             // Dispatch an action to save the user data to the store
             dispatch({ type: "SAVE_USER_DATA", payload: values });

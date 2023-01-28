@@ -20,10 +20,11 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import SelectedCustomerDataTable from "../../components/datatable/SelectedCustomerDataTable";
-import CustomAlert from "./CustomAlert";
+import { CustomLoading } from "../../components/Actions/CustomLoading";
 const Home = () => {
   const date = new Date();
   const [customersList, setCustomersList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [datePickerValue, setDatePickerValue] = useState(
     dayjs(
       date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
@@ -60,12 +61,11 @@ const Home = () => {
   };
 
   const newEntry = async () => {
+    setIsLoading(true);
     const customersListSelected = [];
     var dayName = days[datePickerValue.$d.getDay()];
     const dayListForUser = user.customerListByDay;
     var result = dayListForUser.find((item) => item.day === dayName).customers;
-    console.log(customersList);
-    console.log(result);
     result.forEach((e) => {
       customersListSelected.push({
         customerId: e,
@@ -100,10 +100,8 @@ const Home = () => {
       if (docSnap.exists()) {
         localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
         setUser(JSON.parse(localStorage.getItem("userInfo")));
-        console.log("Document data:", docSnap.data());
-      } else {
-        console.log("No such document!");
-      }
+      } 
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -117,6 +115,8 @@ const Home = () => {
           <Typography sx={{ fontWeight: "bold" }}>
             <HomeInputs datePickerValue={datePickerValue} />
           </Typography>
+          {isLoading?  <CustomLoading /> :
+          <>
           {user.days.includes(todayDateSelected) ? (
             <SelectedCustomerDataTable todayDateSelected={todayDateSelected} />
           ) : (
@@ -131,6 +131,8 @@ const Home = () => {
               </Button>
             </Box>
           )}
+          </> 
+        }
         </Box>
         <Sidebar
           datePickerValue={datePickerValue}
