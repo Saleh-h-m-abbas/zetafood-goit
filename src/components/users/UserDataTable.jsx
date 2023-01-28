@@ -10,6 +10,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { userDatatable } from "../datatable/datatablesource";
+import { UpdateSalaryButton } from "../datatable/UpdateSalaryButton";
+import { PopupMessageUsers } from "../datatable/PopupMessageUsers";
 
 const UserDataTable = () => {
   const [data, setData] = useState([]);
@@ -42,7 +44,7 @@ const UserDataTable = () => {
     {
       field: "action",
       headerName: "تعديل / حذف",
-      width: 150,
+      width: 250,
       renderCell: (params) => {
         return (
           <div className="cellAction">
@@ -52,7 +54,8 @@ const UserDataTable = () => {
             >
               Delete
             </div>
-            <PopupMessage />
+            <PopupMessageUsers />
+            <UpdateSalaryButton />
           </div>
         );
       },
