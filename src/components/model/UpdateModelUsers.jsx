@@ -63,7 +63,7 @@ export const UpdateModelUsers = () => {
                 className="deleteButton"
                 onClick={() => handleOpen()}
             >
-                Update
+                تحديث بيانات المستخدم
             </div>
 
                 <Dialog

@@ -105,7 +105,7 @@ const AddUser = () => {
               as={TextField}
               label="اسم المستخدم"
               className={classes.inputField}
-              variant="standard"
+              variant="filled"
               helperText={touched.username ? errors.username : ""}
               error={touched.username && Boolean(errors.username)}
               fullWidth
@@ -115,7 +115,7 @@ const AddUser = () => {
               as={TextField}
               label="الايميل"
               className={classes.inputField}
-              variant="standard"
+              variant="filled"
               helperText={touched.email ? errors.email : ""}
               error={touched.email && Boolean(errors.email)}
               fullWidth
@@ -126,13 +126,13 @@ const AddUser = () => {
               as={TextField}
               label="الرقم السري"
               className={classes.inputField}
-              variant="standard"
+              variant="filled"
               helperText={touched.password ? errors.password : ""}
               error={touched.password && Boolean(errors.password)}
               fullWidth
             />
             <FormControl
-              variant="standard"
+              variant="filled"
               className={classes.inputField}
               fullWidth
             >

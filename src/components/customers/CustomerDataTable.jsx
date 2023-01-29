@@ -43,17 +43,17 @@ const CustomerDataTable = () => {
     {
       field: "action",
       headerName: "تعديل / حذف",
-      width: 300,
+      width: 350,
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <UpdateSalaryButton />
-            <UpdateModelCustomers />
+            <UpdateSalaryButton customerId={params.row.id} />
+            {/* <UpdateModelCustomers customerId={params.row} /> */}
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row.id)}
             >
-              Delete
+              حذف
             </div>
           </div>
         );

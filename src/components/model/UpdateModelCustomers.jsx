@@ -11,6 +11,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const UpdateModelCustomers = () => {
+export const UpdateModelCustomers = ({customerData}) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -53,11 +54,12 @@ export const UpdateModelCustomers = () => {
   const handleOpen = () => {
     setOpen(true);
   };
-
+  
+  useEffect(()=>{console.log(customerData)},[customerData])
   return (
     <>
       <div className="deleteButton" onClick={() => handleOpen()}>
-        Update
+        تحديث بيانات المستخدم
       </div>
 
       <Dialog open={open} onClose={handleClose}>
@@ -77,47 +79,92 @@ export const UpdateModelCustomers = () => {
                 }
                 return errors;
               }}
+              onSubmit={async (values, { setSubmitting }) => {
+                // const addCustomer = await addDoc(collection(db, "customers"), {
+                //   createdAt: serverTimestamp(),
+                //   name: values.username,
+                //   sales_manager_id: values.salesperson,
+                //   sales_manager_name: usersList.find(
+                //     (e) => e.id === values.salesperson
+                //   ).name,
+                //   user_create: user.username,
+                //   saleTaregt: values.saleTarget,
+                // });
+                // values.username = "";
+                // values.salesperson = "";
+                // values.saleTarget = '';
+                // setSubmitting(true);
+                // await setDoc(
+                //   doc(db, "customers", addCustomer.id),
+                //   {
+                //     uid: addCustomer.id,
+                //   },
+                //   { merge: true }
+                // );
+              }}
             >
-              <Form>
-                <Field
-                  name="username"
-                  as={TextField}
-                  label="اسم المستخدم"
-                  className={classes.inputField}
-                  variant="standard"
-                  fullWidth
-                />
-                <FormControl
-                  variant="standard"
-                  className={classes.inputField}
-                  fullWidth
-                >
-                  <InputLabel id="salesperson-label">
-                    اختار مسؤول المبيعات
-                  </InputLabel>
-                  <Field
-                    name="salesperson"
-                    as={Select}
-                    labelId="salesperson-label"
-                    label="Salesperson"
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value="1">Salesperson 1</MenuItem>
-                    <MenuItem value="2">Salesperson 2</MenuItem>
-                    <MenuItem value="3">Salesperson 3</MenuItem>
-                  </Field>
-                </FormControl>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  className={classes.addButton}
-                >
-                  اضافة
-                </Button>
-              </Form>
+               {({ touched, errors}) => (
+               <Form>
+               <Field
+                 name="username"
+                 as={TextField}
+                 label="اسم المستخدم"
+                 className={classes.inputField}
+                 variant="filled"
+                 InputLabelProps={{
+                   shrink: true,
+                 }}
+                 helperText={touched.username ? errors.username : ""}
+                 error={touched.username && Boolean(errors.username)}
+                 fullWidth
+               />
+               <FormControl
+                 variant="filled"
+                 className={classes.inputField}
+                 fullWidth
+               >
+                 <InputLabel id="salesperson-label">
+                   اختار مسؤول المبيعات
+                 </InputLabel>
+                 {/* <Field
+                   name="salesperson"
+                   as={Select}
+                   labelId="salesperson-label"
+                   helperText={touched.salesperson ? errors.salesperson : ""}
+                   error={touched.salesperson && Boolean(errors.salesperson)}
+                   label="Salesperson"
+                   disabled={usersList.length === 0}
+                 >
+                   {usersList.map((values) => (
+                     <MenuItem value={values.id}>{values.name}</MenuItem>
+                   ))}
+                 </Field> */}
+               </FormControl>
+   
+               <Field
+                 name="saleTarget"
+                 as={TextField}
+                 type="number"
+                 label="الهدف الشهري"
+                 className={classes.inputField}
+                 variant="filled"
+                 InputLabelProps={{
+                   shrink: true,
+                 }}
+                 helperText={touched.saleTarget ? errors.saleTarget : ""}
+                 error={touched.saleTarget && Boolean(errors.saleTarget)}
+                 fullWidth
+               />
+               <Button
+                 type="submit"
+                 variant="contained"
+                 fullWidth
+                 className={classes.addButton}
+               >
+                 اضافة
+               </Button>
+             </Form>
+               )}
             </Formik>
           </div>
         </div>

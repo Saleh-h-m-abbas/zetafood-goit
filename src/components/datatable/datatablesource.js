@@ -1,6 +1,7 @@
 export const customerDatatable = [
   { field: "id", headerName: "الرقم التعريفي", width: 200 },
   { field: "name", headerName: "اسم الزبون", width: 300 },
+  { field: "saleTarget", headerName: "الهدف الشهري", width: 120 },
   { field: "sales_manager_name", headerName: "اسم مسؤول المبيعات", width: 200 },
   {
     field: "createdAt",
@@ -40,7 +41,7 @@ export const userDatatable = [
   },
   {
     field: "createdAt",
-    headerName: "Created At",
+    headerName: "أنشئت في",
     width: 200,
     renderCell: (params) => {
       return (

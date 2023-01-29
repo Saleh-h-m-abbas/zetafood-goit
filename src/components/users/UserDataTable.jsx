@@ -46,13 +46,14 @@ const UserDataTable = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
+            {/* <UpdateModelUsers /> */}
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row.id)}
             >
-              Delete
+              حذف
             </div>
-            <UpdateModelUsers />
+            
           </div>
         );
       },

@@ -27,6 +27,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
+import CustomAlert from "../../components/actions/CustomAlert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,8 +89,7 @@ function UserInfo() {
   const [usersList, setUsersList] = useState([]);
   const [customersList, setCustomersList] = useState([]);
   const [nameValue, setNameValue] = useState("");
-  const [save,setSave]=useState('');
-
+  const [isAlert, setIsAlert] = useState(false);
   const getUsers = async () => {
     const userArray = [];
     const q = query(collection(db, "users"), where("role", "==", 2));
@@ -137,8 +137,11 @@ function UserInfo() {
       values.day = "";
       values.customers=[];
       setNameValue("");
-      setSave('تم تخزين العملية بنجاح');
-    } catch (error) {
+      setIsAlert(true);
+      const timer = setTimeout(() => {
+        setIsAlert(false);
+      }, 3000);
+      return () => clearTimeout(timer);    } catch (error) {
       console.log(error);
     }
   };
@@ -244,11 +247,10 @@ function UserInfo() {
                 <button
                   type="submit"
                   className={classes.submitButton}
-                  //   disabled={isSubmitting}
                 >
                   Save
                 </button>
-                <div style={{marginTop:'15px',color:'green'}}>{save!==''&&save}</div>
+                <div style={{marginTop:'15px',color:'green'}}>{isAlert&&<CustomAlert severity="success"  > تم تخزين البيانات بنجاح</CustomAlert>}</div>
               </Form>
             
             )}

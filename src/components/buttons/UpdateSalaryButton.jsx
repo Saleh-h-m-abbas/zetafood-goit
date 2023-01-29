@@ -1,118 +1,114 @@
-import React from 'react'
-import { Dialog } from '@mui/material';
+import React from "react";
+import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { Formik, Form, Field } from "formik";
-import {
-    TextField,
-    FormControl,
-    Button,
-} from "@material-ui/core";
+import { TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        // margin: theme.spacing(10),
-        backgroundColor: "#326370",
-        padding: theme.spacing(10),
-    },
-    line: {
-        borderBottom: "1px solid white",
-        margin: "10px 0",
-    },
-    title: {
-        color: "white",
-        direction: "rtl",
-        marginBottom: theme.spacing(2),
-    },
-    inputField: {
-        marginBottom: theme.spacing(2),
-        backgroundColor: "white",
-        direction: "rtl",
-    },
-    addButton: {
-        backgroundColor: "#F40057",
-        color: "white",
-        marginTop: theme.spacing(4),
-    },
-    content:{
-        width:'100%',
-        // margin:'50px'
-    }
-    
+  root: {
+    backgroundColor: "#326370",
+    padding: theme.spacing(10),
+  },
+  line: {
+    borderBottom: "1px solid white",
+    margin: "10px 0",
+  },
+  title: {
+    color: "white",
+    direction: "rtl",
+    marginBottom: theme.spacing(2),
+  },
+  inputField: {
+    marginBottom: theme.spacing(2),
+    backgroundColor: "white",
+    direction: "rtl",
+  },
+  addButton: {
+    backgroundColor: "#F40057",
+    color: "white",
+    marginTop: theme.spacing(4),
+  },
+  content: {
+    width: "100%",
+  },
 }));
 
+export const UpdateSalaryButton = ({customerId}) => {
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
 
-export const UpdateSalaryButton = () => {
-    const classes = useStyles();
-    const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-    const handleClose = () => {
-        setOpen(false)
-    }
-    const handleOpen = () => {
-        setOpen(true)
-    }
+  return (
+    <>
+      <div className="deleteButton" onClick={() => handleOpen()}>
+        تحديث الهدف الشهري
+      </div>
 
-    return (
-        <>
-            <div 
-                className="deleteButton"
-                onClick={() => handleOpen()}
+      <Dialog open={open} onClose={handleClose}>
+        <div className={classes.content}>
+          <div className={classes.root}>
+            <h2 className={classes.title}>تعديل الهدف الشهري</h2>
+            <div className={classes.line}></div>
+            <Formik
+              initialValues={{ saleTarget: "" }}
+              validate={(values) => {
+                const errors = {};
+                if (!values.saleTarget) {
+                  errors.saleTarget = "يرجى ادخال الهدف الشهري";
+                }
+                return errors;
+              }}
+              onSubmit={async (values, { setSubmitting }) => {
+                await setDoc(
+                    doc(db, "customers", customerId),
+                    {
+                      saleTarget: values.saleTarget,
+                    },
+                    { merge: true }
+                  );
+                  values.saleTarget="";
+                handleClose();
+              }}
             >
-                تحديث الهدف الشهري
-            </div>
-
-                <Dialog
-                    open={open}
-                    onClose={handleClose}
-                >
-                    <div className={classes.content}>
-                            <div className={classes.root}>
-                                <h2 className={classes.title}>تعديل الراتب</h2>
-                                <div className={classes.line}></div>
-                                <Formik
-                                
-                                    initialValues={{ username: ""}}
-                                    validate={(values) => {
-                                        const errors = {};
-                                        if (!values.username) {
-                                            errors.username = "يرجى تعبئةالراتب";
-                                        }
-                                        return errors;
-                                    }}
-
-                                >
-
-                                    <Form >
-                                        <Field
-                                            name="username"
-                                            as={TextField}
-                                            label="الراتب"
-                                            className={classes.inputField}
-                                            variant="standard"
-                                            fullWidth
-                                        />
-                                        <FormControl
-                                            variant="standard"
-                                            className={classes.inputField}
-                                            fullWidth
-                                        >
-                                        </FormControl>
-                                        <Button
-                                            type="submit"
-                                            variant="contained"
-                                            fullWidth
-                                            className={classes.addButton}
-                                        >
-                                            حفظ
-                                        </Button>
-                                    </Form>
-
-                                </Formik>
-                            </div>
-                            </div>
-                </Dialog>
-        </>
-    )
-}
+              {({ touched, errors }) => (
+                <Form>
+                  <Field
+                    name="saleTarget"
+                    as={TextField}
+                    type="number"
+                    label="الهدف الشهري"
+                    className={classes.inputField}
+                    variant="filled"
+                    helperText={touched.saleTarget ? errors.saleTarget : ""}
+                    error={touched.saleTarget && Boolean(errors.saleTarget)}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    fullWidth
+                  />
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    className={classes.addButton}
+                  >
+                    حفظ
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      </Dialog>
+    </>
+  );
+};

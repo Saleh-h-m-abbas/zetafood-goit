@@ -55,22 +55,24 @@ const Home = () => {
     const q = query(collection(db, "customers"));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      userArray.push({ uid: doc.id, name: doc.get("name") });
+      userArray.push({ uid: doc.id, name: doc.get("name") ,saleTarget: doc.get('saleTarget') });
     });
     setCustomersList(userArray);
   };
 
   const newEntry = async () => {
+    
     setIsLoading(true);
     const customersListSelected = [];
     var dayName = days[datePickerValue.$d.getDay()];
     const dayListForUser = user.customerListByDay;
     var result = dayListForUser.find((item) => item.day === dayName).customers;
     result.forEach((e) => {
+      
       customersListSelected.push({
         customerId: e,
         customerName: customersList.find((x) => x.uid === e).name,
-        saleTarget: "",
+        saleTarget: customersList.find((x) => x.uid === e).saleTarget,
         customerVisit: "",
         visitGoal: "",
         note: "",

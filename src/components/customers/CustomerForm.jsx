@@ -68,15 +68,15 @@ const AddCustomer = () => {
     });
     setUsersList(userArray);
   };
-  useEffect(()=>{
+  useEffect(() => {
     getSales();
-  },[])
+  }, []);
   return (
     <div className={classes.root}>
       <h2 className={classes.title}>اضافة زبون</h2>
       <div className={classes.line}></div>
       <Formik
-        initialValues={{ username: "", salesperson: "" }}
+        initialValues={{ username: "", salesperson: "", saleTarget: '' }}
         validate={(values) => {
           const errors = {};
           if (!values.username) {
@@ -85,6 +85,9 @@ const AddCustomer = () => {
           if (!values.salesperson) {
             errors.salesperson = "يرجى اختيار مسؤول المبيعات";
           }
+          if (!values.saleTarget) {
+            errors.saleTarget = "يرجى ادخال الهدف الشهري";
+          }
           return errors;
         }}
         onSubmit={async (values, { setSubmitting }) => {
@@ -92,31 +95,42 @@ const AddCustomer = () => {
             createdAt: serverTimestamp(),
             name: values.username,
             sales_manager_id: values.salesperson,
-            sales_manager_name: usersList.find((e)=>e.id === values.salesperson ).name,
+            sales_manager_name: usersList.find(
+              (e) => e.id === values.salesperson
+            ).name,
             user_create: user.username,
+            saleTaregt: values.saleTarget,
           });
           values.username = "";
           values.salesperson = "";
+          values.saleTarget = '';
           setSubmitting(true);
-          await setDoc(doc(db, "customers", addCustomer.id), {
-            uid: addCustomer.id
-          },{ merge: true });
+          await setDoc(
+            doc(db, "customers", addCustomer.id),
+            {
+              uid: addCustomer.id,
+            },
+            { merge: true }
+          );
         }}
       >
-        {({ touched, errors, isSubmitting }) => (
+        {({ touched, errors}) => (
           <Form>
             <Field
               name="username"
               as={TextField}
               label="اسم المستخدم"
               className={classes.inputField}
-              variant="standard"
+              variant="filled"
+              InputLabelProps={{
+                shrink: true,
+              }}
               helperText={touched.username ? errors.username : ""}
               error={touched.username && Boolean(errors.username)}
               fullWidth
             />
             <FormControl
-              variant="standard"
+              variant="filled"
               className={classes.inputField}
               fullWidth
             >
@@ -132,17 +146,31 @@ const AddCustomer = () => {
                 label="Salesperson"
                 disabled={usersList.length === 0}
               >
-                {usersList.map((values)=><MenuItem value={values.id}>{values.name}</MenuItem>)}
-                
-      
+                {usersList.map((values) => (
+                  <MenuItem value={values.id}>{values.name}</MenuItem>
+                ))}
               </Field>
             </FormControl>
+
+            <Field
+              name="saleTarget"
+              as={TextField}
+              type="number"
+              label="الهدف الشهري"
+              className={classes.inputField}
+              variant="filled"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              helperText={touched.saleTarget ? errors.saleTarget : ""}
+              error={touched.saleTarget && Boolean(errors.saleTarget)}
+              fullWidth
+            />
             <Button
               type="submit"
               variant="contained"
               fullWidth
               className={classes.addButton}
-              // disabled={isSubmitting}
             >
               اضافة
             </Button>
