@@ -119,7 +119,7 @@ const AddCustomer = () => {
             <Field
               name="username"
               as={TextField}
-              label="اسم المستخدم"
+              label="اسم الزبون"
               className={classes.inputField}
               variant="filled"
               InputLabelProps={{
