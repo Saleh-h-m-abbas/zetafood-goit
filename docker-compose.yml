@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  react-proj:
+    # service 1 container name
+    container_name: zetafood
+    build:
+     
+      context: .
+      dockerfile: Dockerfile
+    
+    ports:
+      - "93:3000"
+   
+    volumes:
+      - "/app"
+      - "/app/node_modules"
+    environment:
+      - NODE_ENV=development

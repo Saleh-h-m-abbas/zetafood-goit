@@ -128,8 +128,8 @@ const SelectedCustomerDataTable = ({ todayDateSelected }) => {
                         }
                         style={{ width: "100%" }}
                       >
-                        <MenuItem value={"موجود"}>موجود</MenuItem>
-                        <MenuItem value={"غير موجود"}>غير موجود</MenuItem>
+                        <MenuItem style={{color: "green"}} value={"موجود"}>موجود</MenuItem>
+                        <MenuItem style={{color: "red"}} value={"غير موجود"}>غير موجود</MenuItem>
                       </Select>
                     </td>
                     <td>

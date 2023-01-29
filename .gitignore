@@ -1,5 +1,6 @@
 /.vscode
+/.DS_Store
 /node_modules
 /package-lock.json
 /yarn.lock
-src/.DS_Store
+src/components/.DS_Store
