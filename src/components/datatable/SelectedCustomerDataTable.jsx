@@ -54,7 +54,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected }) => {
 
   useEffect(() => {
     getSelectedDayData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    console.log(todayDateSelected)
   }, [todayDateSelected]);
   const getSelectedDayData = async () => {
     try {
