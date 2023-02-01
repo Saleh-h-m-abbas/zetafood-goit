@@ -53,6 +53,8 @@ const SelectedCustomerDataTable = ({ todayDateSelected }) => {
   };
 
   useEffect(() => {
+    setValuesForSelectedDay([]);
+    setVisitID("");
     getSelectedDayData();
     console.log(todayDateSelected)
   }, [todayDateSelected]);
@@ -86,80 +88,83 @@ const SelectedCustomerDataTable = ({ todayDateSelected }) => {
         {isLoading ? (
           <CustomLoading />
         ) : (
-          <form onSubmit={handleSubmit}>
-            <div className="buttonspace">
-              <input type="submit" className="updateButton" value={"حفظ"} />
-            </div>
-            <Table>
-              <thead>
-                <tr>
-                  <th className="tr">اسم الزبون </th>
-                  <th className="tr">معدل الهدف الشهري</th>
-                  <th className="tr">الزيارة المندوب</th>
-                  <th className="tr">الهدف من الزيارة</th>
-                  <th className="tr">ملاحظات المندوب</th>
-                </tr>
-              </thead>
-              {valuesForSelectedDay.map((item, index) => (
-                <tbody className="TableCell">
-                  <tr key={index}>
-                    <td>
-                      <TextField
-                        disabled
-                        fullWidth
-                        name="customerName"
-                        variant="filled"
-                        defaultValue={item.customerName}
-                        onInput={(e) => handleChange(e, index, "customerName")}
-                      />
-                    </td>
-                    <td>
-                      <Typography variant="filled">
-                        {item.saleTarget}
-                      </Typography>
-                    </td>
-                    <td>
-                      <Select
-                        variant="filled"
-                        defaultValue={item.customerVisit}
-                        name="customerVisit"
-                        onChange={(e) =>
-                          handleSelect(e, index, "customerVisit")
-                        }
-                        style={{ width: "100%" }}
-                      >
-                        <MenuItem style={{color: "green"}} value={"موجود"}>موجود</MenuItem>
-                        <MenuItem style={{color: "red"}} value={"غير موجود"}>غير موجود</MenuItem>
-                      </Select>
-                    </td>
-                    <td>
-                      <Select
-                        variant="filled"
-                        defaultValue={item.visitGoal}
-                        name="visitGoal"
-                        onChange={(e) => handleSelect(e, index, "visitGoal")}
-                        style={{ width: "100%" }}
-                      >
-                        <MenuItem value={"بيع"}>بيع</MenuItem>
-                        <MenuItem value={"تحصيل"}>تحصيل</MenuItem>
-                      </Select>
-                    </td>
-                    <td>
-                      <TextField
-                        fullWidth
-                        variant="filled"
-                        multiline
-                        maxRows={4}
-                        name="note"
-                        defaultValue={item.note}
-                        onChange={(e) => handleSelect(e, index, "note")}
-                      />
-                    </td>
+          <>
+
+            <form onSubmit={handleSubmit}>
+              <div className="buttonspace">
+                <input type="submit" className="updateButton" value={"حفظ"} />
+              </div>
+              <Table>
+                <thead>
+                  <tr>
+                    <th className="tr">اسم الزبون </th>
+                    <th className="tr">معدل الهدف الشهري</th>
+                    <th className="tr">الزيارة المندوب</th>
+                    <th className="tr">الهدف من الزيارة</th>
+                    <th className="tr">ملاحظات المندوب</th>
                   </tr>
-                </tbody>
-              ))}
-            </Table>
-          </form>
+                </thead>
+                {valuesForSelectedDay.map((item, index) => (
+                  <tbody className="TableCell">
+                    <tr key={index}>
+                      <td>
+                        <TextField
+                          disabled
+                          fullWidth
+                          name="customerName"
+                          variant="filled"
+                          defaultValue={item.customerName}
+                          onInput={(e) => handleChange(e, index, "customerName")}
+                        />
+                      </td>
+                      <td>
+                        <Typography variant="filled">
+                          {item.saleTarget}
+                        </Typography>
+                      </td>
+                      <td>
+                        <Select
+                          variant="filled"
+                          defaultValue={item.customerVisit}
+                          name="customerVisit"
+                          onChange={(e) =>
+                            handleSelect(e, index, "customerVisit")
+                          }
+                          style={{ width: "100%" }}
+                        >
+                          <MenuItem style={{ color: "green" }} value={"موجود"}>موجود</MenuItem>
+                          <MenuItem style={{ color: "red" }} value={"غير موجود"}>غير موجود</MenuItem>
+                        </Select>
+                      </td>
+                      <td>
+                        <Select
+                          variant="filled"
+                          defaultValue={item.visitGoal}
+                          name="visitGoal"
+                          onChange={(e) => handleSelect(e, index, "visitGoal")}
+                          style={{ width: "100%" }}
+                        >
+                          <MenuItem value={"بيع"}>بيع</MenuItem>
+                          <MenuItem value={"تحصيل"}>تحصيل</MenuItem>
+                        </Select>
+                      </td>
+                      <td>
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          multiline
+                          maxRows={4}
+                          name="note"
+                          defaultValue={item.note}
+                          onChange={(e) => handleSelect(e, index, "note")}
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                ))}
+              </Table>
+            </form>
+          </>
         )}
       </div>
     </>

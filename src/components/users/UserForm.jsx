@@ -1,5 +1,5 @@
-import React from "react";
-import { Formik, Form, Field } from "formik";
+import React, { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
   TextField,
   Select,
@@ -7,11 +7,14 @@ import {
   InputLabel,
   MenuItem,
   Button,
+  ListItemIcon,
+  FormHelperText,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,7 +51,25 @@ const useStyles = makeStyles((theme) => ({
 
 const AddUser = () => {
   const classes = useStyles();
+  const [usersList, setUsersList] = useState([]);
+  const [superId, setSuperId] = useState('');
 
+  const getUsers = async () => {
+    const userArray = [];
+    const q = query(
+      collection(db, "users"),
+      where("role", "==", 1)
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      userArray.push({ id: doc.id, name: doc.get("username") });
+    });
+    setUsersList(userArray);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
   return (
     <div className={classes.root}>
       <h2 className={classes.title}>اضافة مستخدم</h2>
@@ -60,7 +81,7 @@ const AddUser = () => {
           if (!values.username) {
             errors.username = "يرجى تعبئة اسم السمتخدم";
           }
-          if (!values.role) {
+          if (values.role==="") {
             errors.role = "يرجى اختيار مسؤول المبيعات";
           }
           if (!values.password) {
@@ -76,17 +97,31 @@ const AddUser = () => {
           createUserWithEmailAndPassword(auth, values.email, values.password)
             .then(async (userCredential) => {
               const user = userCredential.user;
-              await setDoc(doc(db, "users", user.uid), {
-                createdAt: serverTimestamp(),
-                customerListByDay: [],
-                days: [],
-                email: user.email,
-                role: values.role,
-                superId: "",
-                superName: "",
-                uid: user.uid,
-                username: values.username,
-              });
+               if(values.role == 2){
+                await setDoc(doc(db, "users", user.uid), {
+                  createdAt: serverTimestamp(),
+                  customerListByDay: [],
+                  days: [],
+                  email: user.email,
+                  role: values.role,
+                  superId: superId,
+                  superName: usersList.find(
+                    (e) => e.id === superId
+                  ).name ?? '',
+                  uid: user.uid,
+                  username: values.username,
+                })
+               }else{
+                await setDoc(doc(db, "users", user.uid), {
+                  createdAt: serverTimestamp(),
+                  customerListByDay: [],
+                  days: [],
+                  email: user.email,
+                  role: values.role,
+                  uid: user.uid,
+                  username: values.username,
+                })
+               }
               values.username = "";
               values.email = "";
               values.password = "";
@@ -98,7 +133,7 @@ const AddUser = () => {
             });
         }}
       >
-        {({ touched, errors, isSubmitting }) => (
+        {({ values, touched, errors, isSubmitting }) => (
           <Form>
             <Field
               name="username"
@@ -149,7 +184,24 @@ const AddUser = () => {
                 <MenuItem value={1}>مشرف</MenuItem>
                 <MenuItem value={2}>مندوب</MenuItem>
               </Field>
+              <ErrorMessage name="role" component={FormHelperText} style={{color:"red"}} />
             </FormControl>
+
+            {values.role != '' && values.role == 2 && <FormControl
+              variant="filled"
+              className={classes.inputField}
+              fullWidth
+            >
+              <InputLabel id="super-label">اختر المشرف</InputLabel>
+              <Select
+                labelId="super-label"
+                label="المشرف"
+                onChange={(e) => { setSuperId(e.target.value) }}
+                disabled={values.role == 2}
+              >
+                {usersList.map((e) => <MenuItem value={e.id}>{e.name}</MenuItem>)}
+              </Select>
+            </FormControl>}
             <Button
               type="submit"
               variant="contained"

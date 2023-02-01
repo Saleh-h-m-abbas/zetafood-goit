@@ -20,11 +20,12 @@ const useStyles = makeStyles({
   table: {
     width: '100%',
     margin: '0 auto',
-    direction: 'rtl'
+    textAlign: 'right',
+    boxShadow: "0px 0px 10px #ccc",
   },
   scrollableCell: {
     maxHeight: 200,
-    overflowY: 'auto'
+    overflowY: 'auto',
   }
 });
 const UserDataTableInfo = ({ userId }) => {
@@ -39,15 +40,15 @@ const UserDataTableInfo = ({ userId }) => {
     setData(item);
   }
   const getCustomers = async () => {
-    if(customersList.length==0){
-    const userArray = [];
-    const q = query(collection(db, "customers"));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      userArray.push({ uid: doc.id, name: doc.get("name") ,saleTarget: doc.get('saleTarget') });
-    });
-    setCustomersList(userArray);
-  }
+    if (customersList.length == 0) {
+      const userArray = [];
+      const q = query(collection(db, "customers"));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        userArray.push({ uid: doc.id, name: doc.get("name") });
+      });
+      setCustomersList(userArray);
+    }
   };
 
   useEffect(() => {
@@ -60,22 +61,21 @@ const UserDataTableInfo = ({ userId }) => {
       <div className="datatableTitle">
         الايام للمندوب المختار
       </div>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
+      <TableContainer component={Paper} >
+        <Table className={classes.table} aria-label="simple table" >
           <TableHead>
-            <TableRow>
-              <TableCell>Day</TableCell>
-              <TableCell>Customers</TableCell>
+            <TableRow >
+              <TableCell style={{ textAlign: 'right' }}>Day</TableCell>
+              <TableCell style={{ textAlign: 'right' }}>Customers</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map(item => (
+            {userId != "" && data.map(item => (
               <TableRow >
-                <TableCell>{item.day}</TableCell>
-                <TableCell>
+                <TableCell style={{ textAlign: 'right' }}>{item.day}</TableCell>
+                <TableCell style={{ textAlign: 'right' }} >
                   <div className={classes.scrollableCell}>
-                    {/* {customersList.find((x) => x.uid === e).name } */}
-                    {item.customers.map((e)=><div>{customersList.find((x) => x.uid === e).name??''}</div>)}
+                    {item.customers.map((e) => <div>{customersList.find((x) => x.uid === e).name ?? ''}</div>)}
                   </div>
                 </TableCell>
               </TableRow>

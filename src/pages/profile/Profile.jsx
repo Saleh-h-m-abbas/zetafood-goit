@@ -1,5 +1,5 @@
 import { Box, Button, Select, TextField } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Person2RoundedIcon from "@mui/icons-material/Person2Rounded";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
 import MenuItem from "@mui/material/MenuItem";
@@ -12,6 +12,9 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import * as Yup from "yup";
 import { Field, Form, Formik } from "formik";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase";
+import CustomAlert from "../../components/actions/CustomAlert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,13 +23,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     direction: "rtl",
   },
-
   box: {
     margin: 'auto',
     marginTop: '40px',
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#d9d9d9",
+    backgroundColor: "white",
+    boxShadow: "0px 0px 10px #ccc",
     padding: theme.spacing(5),
     width: "50%",
     borderRadius: "40px",
@@ -41,18 +44,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     height: '60vh',
     width: "100%",
-  },
-  button: {
-    marginTop: theme.spacing(4),
-    width: "50%",
-    padding: '110px',
-    backgroundColor: "#e22f56",
-  },
+  }
 }));
 
 const ProfilePage = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [isAlert, setIsAlert] = useState(false);
   const { dispatch } = useContext(AuthContext);
   const user = JSON.parse(localStorage.getItem("userInfo"));
   return (
@@ -63,38 +61,55 @@ const ProfilePage = () => {
         <Formik
           initialValues={{
             name: user.username,
-            password: "",
             email: user.email,
             authorizations: user.role,
           }}
           validationSchema={Yup.object({
             name: Yup.string().required("يرجى تعبئة الاسم"),
-            password: Yup.string()
-              .required("يرجى تعبئة كلمة السر")
-              .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/i,
-                "كلمة السر غير صالحة "
-              ),
             email: Yup.string()
               .required("يرجى تعبئة الايميل")
               .email("الايميل غير صالح"),
             authorizations: Yup.string().required("يرجى تعبئة الصلاحيات"),
           })}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(false);
-            // Dispatch an action to save the user data to the store
-            dispatch({ type: "SAVE_USER_DATA", payload: values });
-            // Navigate to the homepage
-            navigate("/home");
+          onSubmit={async (values, { setSubmitting }) => {
+            setSubmitting(true)
+            try {
+              await setDoc(
+                doc(db, "users", user.uid),
+                {
+                  uid: user.uid,
+                  username: values.name,
+                  email: values.email,
+                  role: values.authorizations
+                },
+                { merge: true }
+              );
+
+              const docRef = doc(db, "users", user.uid);
+              const docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
+              } 
+              setIsAlert(true);
+              const timer = setTimeout(() => {
+                setIsAlert(false);
+              }, 7000);
+              return () => clearTimeout(timer);
+            } catch (error) {
+              console.log(error)
+            }
+
+            setSubmitting(false)
           }}
+
         >
-          {({errors, touched, isSubmitting }) => (
+          {({ errors, touched, isSubmitting }) => (
             <Box className={classes.box}>
               <Form className={classes.form}>
                 <h1 className={classes.title}>الصفحة الشخصية</h1>
 
                 <Field
-                  variant="outlined"
+                  variant="filled"
                   className={classes.input}
                   as={TextField}
                   type="text"
@@ -113,25 +128,7 @@ const ProfilePage = () => {
 
                 />
                 <Field
-                  variant="outlined"
-                  className={classes.input}
-                  type="password"
-                  name="password"
-                  as={TextField}
-                  label="كلمة المرور"
-                  helperText={touched.password ? errors.password : ""}
-                  error={touched.password && Boolean(errors.password)}
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockRoundedIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <Field
-                  variant="outlined"
+                  variant="filled"
                   className={classes.input}
                   type="email"
                   as={TextField}
@@ -149,37 +146,40 @@ const ProfilePage = () => {
                   }}
                 />
                 <Field
-                  
-                  variant="outlined"
+
+                  variant="filled"
                   className={classes.input}
                   as={Select}
                   name="authorizations"
                   label="الصلاحيات"
                   fullWidth
                   displayEmpty
-                  disabled={user.role==='0'?true:false}
+                  disabled={user.role === '0' ? true : false}
                 >
                   <MenuItem value="" disabled>
                     الصلاحيات
                   </MenuItem>
-                  <MenuItem value="0">مدير</MenuItem>
-                  <MenuItem value="1">مشرف</MenuItem>
-                  <MenuItem value="2">مندوب</MenuItem>
+                  <MenuItem value={0}>مدير</MenuItem>
+                  <MenuItem value={1}>مشرف</MenuItem>
+                  <MenuItem value={2}>مندوب</MenuItem>
                 </Field>
                 <Button
                   type="submit"
                   variant="contained"
-                  sx={{
+                  style={{
+                    backgroundColor: '#e22f56',
+                    width: "50%",
+                    padding: '110px',
+                    border: 0,
+                    borderRadius: '30px',
                     fontSize: '20px',
                     padding: '15px',
-                    backgroundColor: '#e22f56'
                   }}
-                  className={`${classes.button} biggerSaveButton`}
-                  disabled={isSubmitting}
                 >
                   حفظ التغييرات
                 </Button>
               </Form>
+              <div style={{ marginTop: '15px', color: 'green' }}>{isAlert && <CustomAlert severity="success"  > تم تخزين البيانات بنجاح</CustomAlert>}</div>
             </Box>
           )}
         </Formik>

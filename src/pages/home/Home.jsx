@@ -24,6 +24,7 @@ import { CustomLoading } from "../../components/actions/CustomLoading";
 const Home = () => {
   const date = new Date();
   const [customersList, setCustomersList] = useState([]);
+  const [errorNoCustomer, setErrorNoCustomer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [datePickerValue, setDatePickerValue] = useState(
     dayjs(
@@ -36,7 +37,7 @@ const Home = () => {
     (datePickerValue.$d.getMonth() + 1) +
     "-" +
     datePickerValue.$d.getDate();
-  const [user,setUser] = useState(JSON.parse(localStorage.getItem("userInfo")));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("userInfo")));
   var days = [
     "Sunday",
     "Monday",
@@ -51,70 +52,66 @@ const Home = () => {
     getCustomers();
   }, []);
   const getCustomers = async () => {
-    const userArray = [];
-    const q = query(collection(db, "customers"));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      userArray.push({ uid: doc.id, name: doc.get("name") ,saleTarget: doc.get('saleTarget') });
-    });
-    setCustomersList(userArray);
+    if (customersList.length == 0) {
+      const userArray = [];
+      const q = query(collection(db, "customers"));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        userArray.push({ uid: doc.id, name: doc.get("name"), saleTarget: doc.get('saleTarget') });
+      });
+      setCustomersList(userArray);
+    }
   };
 
   const newEntry = async () => {
-    
     setIsLoading(true);
+    setErrorNoCustomer(false);
     const customersListSelected = [];
     var dayName = days[datePickerValue.$d.getDay()];
-    const dayListForUser = user.customerListByDay;
-    var result = dayListForUser.find((item) => item.day === dayName).customers;
-    result.forEach((e) => {
-      customersListSelected.push({
-        customerId: e,
-        customerName: customersList.find((x) => x.uid === e).name,
-        saleTarget: customersList.find((x) => x.uid === e).saleTarget ?? 0,
-        customerVisit: "",
-        visitGoal: "",
-        note: "",
+    if (user.customerListByDay.length!=0) {
+      const dayListForUser = user.customerListByDay;
+      var result = dayListForUser.find((item) => item.day === dayName).customers;
+      result.forEach((e) => {
+        customersListSelected.push({
+          customerId: e,
+          customerName: customersList.find((x) => x.uid === e).name,
+          saleTarget: customersList.find((x) => x.uid === e).saleTarget ?? 0,
+          customerVisit: "",
+          visitGoal: "",
+          note: "",
+        });
       });
-    });
-
-    try {
-      console.log({
-        createdAt: serverTimestamp(),
-        createdBy: user.uid,
-        dateOfVisit: todayDateSelected,
-        day: dayName,
-        listOfCustomers: customersListSelected,
-        superID: "",
-        superName: "",
-        userId: user.uid,
-      })
-      await addDoc(collection(db, "visitInformation"), {
-        createdAt: serverTimestamp(),
-        createdBy: user.uid,
-        dateOfVisit: todayDateSelected,
-        day: dayName,
-        listOfCustomers: customersListSelected,
-        superID: "",
-        superName: "",
-        userId: user.uid,
-      });
-      await setDoc(
-        doc(db, "users", user.uid),
-        {
-          days: arrayUnion(todayDateSelected),
-        },
-        { merge: true }
-      );
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
-        setUser(JSON.parse(localStorage.getItem("userInfo")));
-      } 
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
+      try {
+        await addDoc(collection(db, "visitInformation"), {
+          createdAt: serverTimestamp(),
+          createdBy: user.uid,
+          dateOfVisit: todayDateSelected,
+          day: dayName,
+          listOfCustomers: customersListSelected,
+          superID: "",
+          superName: "",
+          userId: user.uid,
+        });
+        await setDoc(
+          doc(db, "users", user.uid),
+          {
+            days: arrayUnion(todayDateSelected),
+          },
+          { merge: true }
+        );
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
+          setUser(JSON.parse(localStorage.getItem("userInfo")));
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      setIsLoading(false)
+      setErrorNoCustomer(true)
     }
   };
 
@@ -126,24 +123,25 @@ const Home = () => {
           <Typography sx={{ fontWeight: "bold" }}>
             <HomeInputs datePickerValue={datePickerValue} />
           </Typography>
-          {isLoading?  <CustomLoading /> :
-          <>
-          {user.days.includes(todayDateSelected) ? (
-            <SelectedCustomerDataTable todayDateSelected={todayDateSelected} />
-          ) : (
-            <Box mt={5}>
-              <Button
-                color="secondary"
-                variant="contained"
-                fullWidth
-                onClick={newEntry}
-              >
-                اضافة يوم جديد
-              </Button>
-            </Box>
-          )}
-          </> 
-        }
+          {isLoading ? <CustomLoading /> :
+            <>
+              {user.days.includes(todayDateSelected) ? (
+                <SelectedCustomerDataTable todayDateSelected={todayDateSelected} />
+              ) : (
+                <Box mt={5}>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    fullWidth
+                    onClick={newEntry}
+                  >
+                    اضافة يوم جديد
+                  </Button>
+                  {errorNoCustomer && <div style={{ color: "red" }}> {"لا يمكن اضافه هذا اليوم بسبب عدم وجود زبائن معرفين لهذا اليوم"} </div>}
+                </Box>
+              )}
+            </>
+          }
         </Box>
         <Sidebar
           datePickerValue={datePickerValue}

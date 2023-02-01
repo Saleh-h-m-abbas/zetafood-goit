@@ -15,7 +15,8 @@ export const Sidebar = ({ datePickerValue, setDatePickerValue }) => {
 
   return (
     <>
-      <div
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+    <div
         sx={{
           width: drawerWidth,
           "& .MuiDrawer-paper": {
@@ -29,25 +30,17 @@ export const Sidebar = ({ datePickerValue, setDatePickerValue }) => {
         variant="permanent"
         anchor="right"
       >
-        <Grid>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid
-              sx={{
+      <Grid  spacing={3} sx={{
                 mt: "10px",
                 borderRadius: "25px",
               }}
-              bgcolor={"#56a7bc"}
-            >
-              <CalendarPicker
-                openTo="day"
-                shouldDisableDate={isWeekend}
-                value={datePickerValue}
-                onChange={(newDate) => setDatePickerValue(newDate)}
-              />
-            </Grid>
-          </LocalizationProvider>
+              bgcolor={"#56a7bc"}>
+        <Grid item xs={6} md={2} >
+          <CalendarPicker date={datePickerValue} onChange={(newDate) => setDatePickerValue(newDate)} />
         </Grid>
+      </Grid>
       </div>
+    </LocalizationProvider>
     </>
   );
 };

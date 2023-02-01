@@ -32,7 +32,7 @@ import UserDataTableInfo from "../../components/users/UserDataTableInfo";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex", 
+    display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -64,6 +64,8 @@ const useStyles = makeStyles((theme) => ({
     padding: "15px",
     fontSize: "20px",
     color: "white",
+    border: "0",
+    borderRadius: "20px",
     backgroundColor: "#e22f56",
     "&:hover": {
       backgroundColor: "#c81d40",
@@ -102,6 +104,9 @@ function UserInfo() {
     setUsersList(userArray);
   };
   const getCustomers = async (userId) => {
+    const docRef = doc(db, "users", userId);
+    const snapshot = await getDoc(docRef);
+    const item = snapshot.data().customerListByDay;
     const userArray = [];
     const q = query(
       collection(db, "customers"),
@@ -111,7 +116,10 @@ function UserInfo() {
     querySnapshot.forEach((doc) => {
       userArray.push({ id: doc.id, name: doc.get("name") });
     });
-    setCustomersList(userArray);
+    const vvv = []
+    let x = item.map((e) => e.customers.map((s) => vvv.push(s)))
+    const filteredUsers = userArray.filter(user => !vvv.includes(user.id));
+    setCustomersList(filteredUsers);
   };
   const updateData = async (values) => {
     const docRef = doc(db, "users", nameValue);
@@ -137,13 +145,14 @@ function UserInfo() {
         );
       }
       values.day = "";
-      values.customers=[];
+      values.customers = [];
       setNameValue("");
       setIsAlert(true);
       const timer = setTimeout(() => {
         setIsAlert(false);
-      }, 3000);
-      return () => clearTimeout(timer);    } catch (error) {
+      }, 7000);
+      return () => clearTimeout(timer);
+    } catch (error) {
       console.log(error);
     }
   };
@@ -164,10 +173,10 @@ function UserInfo() {
               updateData(values);
             }}
           >
-            {({  handleChange, values }) => (
+            {({ handleChange, values }) => (
               <Form>
                 <FormControl
-                  variant="outlined"
+                  variant="filled"
                   fullWidth
                   margin="normal"
                   required
@@ -192,7 +201,7 @@ function UserInfo() {
                   <ErrorMessage name="day" component={FormHelperText} />
                 </FormControl>
                 <FormControl
-                  variant="outlined"
+                  variant="filled"
                   fullWidth
                   margin="normal"
                   required
@@ -213,7 +222,7 @@ function UserInfo() {
                   <ErrorMessage name="day" component={FormHelperText} />
                 </FormControl>
                 <FormControl
-                  variant="outlined"
+                  variant="filled"
                   fullWidth
                   margin="normal"
                   required
@@ -233,7 +242,7 @@ function UserInfo() {
                         )
                         .join(", ")
                     }
-                    label="Select Customers"
+                    label="اختار الزبائن"
                   >
                     {customersList.map((customer, index) => (
                       <MenuItem key={index} value={customer.id}>
@@ -252,16 +261,16 @@ function UserInfo() {
                 >
                   Save
                 </button>
-                <div style={{marginTop:'15px',color:'green'}}>{isAlert&&<CustomAlert severity="success"  > تم تخزين البيانات بنجاح</CustomAlert>}</div>
+                <div style={{ marginTop: '15px', color: 'green' }}>{isAlert && <CustomAlert severity="success"  > تم تخزين البيانات بنجاح</CustomAlert>}</div>
               </Form>
-            
+
             )}
           </Formik>
         </Box>
-       
-        <UserDataTableInfo userId={nameValue}/>
+
+        <UserDataTableInfo userId={nameValue} />
       </div>
-      
+
     </>
   );
 }
