@@ -36,10 +36,10 @@ const UserDataTableInfo = ({ userId }) => {
     const docRef = doc(db, "users", userId);
     const snapshot = await getDoc(docRef);
     const item = snapshot.data().customerListByDay;
-    console.log(item)
     setData(item);
   }
   const getCustomers = async () => {
+    if(customersList.length==0){
     const userArray = [];
     const q = query(collection(db, "customers"));
     const querySnapshot = await getDocs(q);
@@ -47,6 +47,7 @@ const UserDataTableInfo = ({ userId }) => {
       userArray.push({ uid: doc.id, name: doc.get("name") ,saleTarget: doc.get('saleTarget') });
     });
     setCustomersList(userArray);
+  }
   };
 
   useEffect(() => {
