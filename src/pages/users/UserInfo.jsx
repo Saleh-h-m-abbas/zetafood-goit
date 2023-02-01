@@ -28,15 +28,17 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import CustomAlert from "../../components/actions/CustomAlert";
+import UserDataTableInfo from "../../components/users/UserDataTableInfo";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "column",
+    display: "flex", 
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     height: "80vh",
     direction: "rtl",
+    margin: '20px'
   },
   box: {
     boxShadow: "0px 0px 10px 0px #ccc",
@@ -257,7 +259,9 @@ function UserInfo() {
           </Formik>
         </Box>
        
+        <UserDataTableInfo userId={nameValue}/>
       </div>
+      
     </>
   );
 }

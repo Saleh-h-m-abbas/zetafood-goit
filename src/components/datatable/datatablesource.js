@@ -54,3 +54,8 @@ export const userDatatable = [
     },
   },
 ];
+
+export const userDatatableInfo = [
+  { field: "day", headerName: "day", width: 250 },
+  { field: "customers", headerName: "customers", width: 100 },
+];

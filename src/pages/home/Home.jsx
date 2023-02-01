@@ -68,11 +68,10 @@ const Home = () => {
     const dayListForUser = user.customerListByDay;
     var result = dayListForUser.find((item) => item.day === dayName).customers;
     result.forEach((e) => {
-      
       customersListSelected.push({
         customerId: e,
         customerName: customersList.find((x) => x.uid === e).name,
-        saleTarget: customersList.find((x) => x.uid === e).saleTarget,
+        saleTarget: customersList.find((x) => x.uid === e).saleTarget ?? 0,
         customerVisit: "",
         visitGoal: "",
         note: "",
@@ -80,6 +79,16 @@ const Home = () => {
     });
 
     try {
+      console.log({
+        createdAt: serverTimestamp(),
+        createdBy: user.uid,
+        dateOfVisit: todayDateSelected,
+        day: dayName,
+        listOfCustomers: customersListSelected,
+        superID: "",
+        superName: "",
+        userId: user.uid,
+      })
       await addDoc(collection(db, "visitInformation"), {
         createdAt: serverTimestamp(),
         createdBy: user.uid,
