@@ -70,12 +70,12 @@ const UserDataTableInfo = ({ userId }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {userId != "" && data.map(item => (
+            {userId !== "" && data.map(item => (
               <TableRow >
                 <TableCell style={{ textAlign: 'right' }}>{item.day}</TableCell>
                 <TableCell style={{ textAlign: 'right' }} >
                   <div className={classes.scrollableCell}>
-                    {item.customers.map((e) => <div>{customersList.find((x) => x.uid === e).name ?? ''}</div>)}
+                    {customersList&&item.customers.map((e) => <div>{customersList.find((x) => x.uid === e).name ?? ''}</div>)}
                   </div>
                 </TableCell>
               </TableRow>

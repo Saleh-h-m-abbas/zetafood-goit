@@ -9,7 +9,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { userDatatable } from "../datatable/datatablesource";
-import { UpdateModelUsers } from "../model/UpdateModelUsers";
 
 const UserDataTable = () => {
   const [data, setData] = useState([]);

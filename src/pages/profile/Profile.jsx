@@ -1,15 +1,11 @@
 import { Box, Button, Select, TextField } from "@mui/material";
 import React, { useState } from "react";
 import Person2RoundedIcon from "@mui/icons-material/Person2Rounded";
-import LockRoundedIcon from "@mui/icons-material/LockRounded";
 import MenuItem from "@mui/material/MenuItem";
 import Navbar from "../../components/navbar/Navbar";
 import { makeStyles } from "@material-ui/core/styles";
-import { useNavigate } from "react-router-dom";
 import { InputAdornment } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
 import * as Yup from "yup";
 import { Field, Form, Formik } from "formik";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -49,10 +45,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ProfilePage = () => {
   const classes = useStyles();
-  const navigate = useNavigate();
   const [isAlert, setIsAlert] = useState(false);
-  const { dispatch } = useContext(AuthContext);
   const user = JSON.parse(localStorage.getItem("userInfo"));
+  console.log(user.role)
   return (
     <>
       <Navbar />
@@ -93,7 +88,7 @@ const ProfilePage = () => {
               setIsAlert(true);
               const timer = setTimeout(() => {
                 setIsAlert(false);
-              }, 7000);
+              }, 10000);
               return () => clearTimeout(timer);
             } catch (error) {
               console.log(error)
@@ -154,7 +149,7 @@ const ProfilePage = () => {
                   label="الصلاحيات"
                   fullWidth
                   displayEmpty
-                  disabled={user.role === '0' ? true : false}
+                  disabled={user.role !== 0 ? true : false}
                 >
                   <MenuItem value="" disabled>
                     الصلاحيات
@@ -169,7 +164,6 @@ const ProfilePage = () => {
                   style={{
                     backgroundColor: '#e22f56',
                     width: "50%",
-                    padding: '110px',
                     border: 0,
                     borderRadius: '30px',
                     fontSize: '20px',

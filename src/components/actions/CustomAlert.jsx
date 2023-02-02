@@ -5,8 +5,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     position: 'absolute',
     top: theme.spacing(10),
-    left: theme.spacing(-1),
-    width: theme.spacing(30),
+    left: theme.spacing(1),
+    width: theme.spacing(50),
     height: theme.spacing(10),
     display: 'flex',
     alignItems: 'center',

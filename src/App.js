@@ -7,6 +7,7 @@ import Customers from "./pages/customers/Customers";
 import ProfilePage from "./pages/profile/Profile";
 import Users from "./pages/users/Users";
 import UserInfo from "./pages/users/UserInfo";
+import AdminHome from "./pages/home/AdminHome";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -27,7 +28,7 @@ function App() {
             index
             element={
               <RequireAuth>
-                <Home />
+                {user&&user.role===0?<AdminHome />:<Home />}
               </RequireAuth>
             }
           />

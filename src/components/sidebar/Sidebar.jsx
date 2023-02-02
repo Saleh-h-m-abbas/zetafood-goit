@@ -36,7 +36,7 @@ export const Sidebar = ({ datePickerValue, setDatePickerValue }) => {
               }}
               bgcolor={"#56a7bc"}>
         <Grid item xs={6} md={2} >
-          <CalendarPicker date={datePickerValue} onChange={(newDate) => setDatePickerValue(newDate)} />
+          <CalendarPicker date={datePickerValue} shouldDisableDate={isWeekend} onChange={(newDate) => setDatePickerValue(newDate)} />
         </Grid>
       </Grid>
       </div>

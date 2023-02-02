@@ -20,8 +20,7 @@ import { db } from "../../firebase";
 import CustomAlert from "../actions/CustomAlert";
 import { CustomLoading } from "../actions/CustomLoading";
 
-const SelectedCustomerDataTable = ({ todayDateSelected }) => {
-  const user = JSON.parse(localStorage.getItem("userInfo"));
+const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAlert, setIsAlert] = useState(false);
   const [visitId, setVisitID] = useState("");
@@ -48,22 +47,31 @@ const SelectedCustomerDataTable = ({ todayDateSelected }) => {
     setIsAlert(true);
     const timer = setTimeout(() => {
       setIsAlert(false);
-    }, 3000);
+    }, 10000);
     return () => clearTimeout(timer);
   };
 
+  const changeColor=(value)=>{
+    if(value==="موجود"){
+      document.getElementById("customerVisit").style.backgroundColor="green"
+    }
+    if(value==="غير موجود"){
+      document.getElementById("customerVisit").style.backgroundColor="red"
+    }
+  }
   useEffect(() => {
     setValuesForSelectedDay([]);
     setVisitID("");
     getSelectedDayData();
     console.log(todayDateSelected)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todayDateSelected]);
   const getSelectedDayData = async () => {
     try {
       const q = query(
         collection(db, "visitInformation"),
         where("dateOfVisit", "==", todayDateSelected),
-        where("userId", "==", user.uid)
+        where("userId", "==", userId)
       );
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
@@ -91,10 +99,10 @@ const SelectedCustomerDataTable = ({ todayDateSelected }) => {
           <>
 
             <form onSubmit={handleSubmit}>
-              <div className="buttonspace">
+              {!isAdmin&&<div className="buttonspace">
                 <input type="submit" className="updateButton" value={"حفظ"} />
-              </div>
-              <Table>
+              </div>}
+              <Table style={{marginTop:'10px'}}>
                 <thead>
                   <tr>
                     <th className="tr">اسم الزبون </th>
@@ -124,20 +132,23 @@ const SelectedCustomerDataTable = ({ todayDateSelected }) => {
                       </td>
                       <td>
                         <Select
+                          disabled={isAdmin}
+                          id="customerVisit"
                           variant="filled"
                           defaultValue={item.customerVisit}
                           name="customerVisit"
                           onChange={(e) =>
-                            handleSelect(e, index, "customerVisit")
+                            {handleSelect(e, index, "customerVisit");changeColor(e.target.value)}
                           }
-                          style={{ width: "100%" }}
+                          style={{ width: "100%",color:'white',backgroundColor:item.customerVisit==="موجود"?'green':'red'}}
                         >
-                          <MenuItem style={{ color: "green" }} value={"موجود"}>موجود</MenuItem>
-                          <MenuItem style={{ color: "red" }} value={"غير موجود"}>غير موجود</MenuItem>
+                          <MenuItem  value={"موجود"}>موجود</MenuItem>
+                          <MenuItem  value={"غير موجود"}>غير موجود</MenuItem>
                         </Select>
                       </td>
                       <td>
                         <Select
+                         disabled={isAdmin}
                           variant="filled"
                           defaultValue={item.visitGoal}
                           name="visitGoal"
@@ -150,6 +161,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected }) => {
                       </td>
                       <td>
                         <TextField
+                         disabled={isAdmin}
                           fullWidth
                           variant="filled"
                           multiline

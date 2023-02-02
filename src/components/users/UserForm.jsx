@@ -7,7 +7,6 @@ import {
   InputLabel,
   MenuItem,
   Button,
-  ListItemIcon,
   FormHelperText,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -64,6 +63,7 @@ const AddUser = () => {
     querySnapshot.forEach((doc) => {
       userArray.push({ id: doc.id, name: doc.get("username") });
     });
+    console.log(userArray)
     setUsersList(userArray);
   };
 
@@ -197,7 +197,6 @@ const AddUser = () => {
                 labelId="super-label"
                 label="المشرف"
                 onChange={(e) => { setSuperId(e.target.value) }}
-                disabled={values.role == 2}
               >
                 {usersList.map((e) => <MenuItem value={e.id}>{e.name}</MenuItem>)}
               </Select>

@@ -54,7 +54,7 @@ export default function Navbar() {
   const open = Boolean(anchorEl);
   const navitage = useNavigate();
   const { dispatch } = useContext(AuthContext);
-  const [user,setUser] = useState(JSON.parse(localStorage.getItem("userInfo")));
+  const [user] = useState(JSON.parse(localStorage.getItem("userInfo")));
 
 
    

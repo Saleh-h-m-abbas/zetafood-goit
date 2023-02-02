@@ -21,6 +21,7 @@ import {
 import { db } from "../../firebase";
 import SelectedCustomerDataTable from "../../components/datatable/SelectedCustomerDataTable";
 import { CustomLoading } from "../../components/actions/CustomLoading";
+import CustomAlert from "../../components/actions/CustomAlert";
 const Home = () => {
   const date = new Date();
   const [customersList, setCustomersList] = useState([]);
@@ -37,7 +38,9 @@ const Home = () => {
     (datePickerValue.$d.getMonth() + 1) +
     "-" +
     datePickerValue.$d.getDate();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("userInfo")));
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("userInfo"))
+  );
   var days = [
     "Sunday",
     "Monday",
@@ -50,16 +53,22 @@ const Home = () => {
 
   useEffect(() => {
     getCustomers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const getCustomers = async () => {
-    if (customersList.length == 0) {
-      const userArray = [];
+    if (customersList.length === 0) {
+      const customersArray = [];
       const q = query(collection(db, "customers"));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-        userArray.push({ uid: doc.id, name: doc.get("name"), saleTarget: doc.get('saleTarget') });
+        customersArray.push({
+          uid: doc.id,
+          name: doc.get("name"),
+          saleTarget: doc.get("saleTarget"),
+        });
       });
-      setCustomersList(userArray);
+      setCustomersList(customersArray);
     }
   };
 
@@ -68,9 +77,11 @@ const Home = () => {
     setErrorNoCustomer(false);
     const customersListSelected = [];
     var dayName = days[datePickerValue.$d.getDay()];
-    if (user.customerListByDay.length!=0) {
-      const dayListForUser = user.customerListByDay;
-      var result = dayListForUser.find((item) => item.day === dayName).customers;
+    const dayListForUser = user.customerListByDay;
+    if (dayListForUser.find((item) => item.day === dayName)) {
+      var result = dayListForUser.find(
+        (item) => item.day === dayName
+      ).customers;
       result.forEach((e) => {
         customersListSelected.push({
           customerId: e,
@@ -88,8 +99,9 @@ const Home = () => {
           dateOfVisit: todayDateSelected,
           day: dayName,
           listOfCustomers: customersListSelected,
-          superID: "",
-          superName: "",
+          superId: user.superId??'',
+          superName: user.superName??'',
+          userUsername: user.username,
           userId: user.uid,
         });
         await setDoc(
@@ -108,10 +120,21 @@ const Home = () => {
         setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
+        setErrorNoCustomer(true);
+        const timer = setTimeout(() => {
+          setErrorNoCustomer(false);
+        }, 10000);
+        return () => clearTimeout(timer);
       }
     } else {
-      setIsLoading(false)
-      setErrorNoCustomer(true)
+      setIsLoading(false);
+      setErrorNoCustomer(true);
+      const timer = setTimeout(() => {
+        setErrorNoCustomer(false);
+      }, 10000);
+      return () => clearTimeout(timer);
+     
     }
   };
 
@@ -123,10 +146,16 @@ const Home = () => {
           <Typography sx={{ fontWeight: "bold" }}>
             <HomeInputs datePickerValue={datePickerValue} />
           </Typography>
-          {isLoading ? <CustomLoading /> :
+          {isLoading ? (
+            <CustomLoading />
+          ) : (
             <>
               {user.days.includes(todayDateSelected) ? (
-                <SelectedCustomerDataTable todayDateSelected={todayDateSelected} />
+                <SelectedCustomerDataTable
+                  todayDateSelected={todayDateSelected}
+                  userId={user.uid}
+                  isAdmin={false}
+                />
               ) : (
                 <Box mt={5}>
                   <Button
@@ -137,11 +166,20 @@ const Home = () => {
                   >
                     اضافة يوم جديد
                   </Button>
-                  {errorNoCustomer && <div style={{ color: "red" }}> {"لا يمكن اضافه هذا اليوم بسبب عدم وجود زبائن معرفين لهذا اليوم"} </div>}
+                  {errorNoCustomer && (
+                    <div style={{ color: "red" }}>
+                      <CustomAlert severity="error">
+                        {" "}
+                        {
+                          "لا يمكن اضافه يوم جديد بسبب عدم وجود زبائن معرفين لهذا اليوم"
+                        }{" "}
+                      </CustomAlert>
+                    </div>
+                  )}
                 </Box>
               )}
             </>
-          }
+          )}
         </Box>
         <Sidebar
           datePickerValue={datePickerValue}

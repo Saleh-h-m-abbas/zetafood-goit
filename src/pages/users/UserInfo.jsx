@@ -116,9 +116,9 @@ function UserInfo() {
     querySnapshot.forEach((doc) => {
       userArray.push({ id: doc.id, name: doc.get("name") });
     });
-    const vvv = []
-    let x = item.map((e) => e.customers.map((s) => vvv.push(s)))
-    const filteredUsers = userArray.filter(user => !vvv.includes(user.id));
+    const UsersIdArray = []
+    item.map((e) => e.customers.map((s) => UsersIdArray.push(s)))
+    const filteredUsers = userArray.filter(user => !UsersIdArray.includes(user.id));
     setCustomersList(filteredUsers);
   };
   const updateData = async (values) => {
@@ -150,7 +150,7 @@ function UserInfo() {
       setIsAlert(true);
       const timer = setTimeout(() => {
         setIsAlert(false);
-      }, 7000);
+      }, 10000);
       return () => clearTimeout(timer);
     } catch (error) {
       console.log(error);
@@ -238,7 +238,7 @@ function UserInfo() {
                         .map(
                           (id) =>
                             customersList.find((customer) => customer.id === id)
-                              .name
+                              .name??''
                         )
                         .join(", ")
                     }
