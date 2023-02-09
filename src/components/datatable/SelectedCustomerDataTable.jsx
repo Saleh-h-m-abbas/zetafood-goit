@@ -51,19 +51,18 @@ const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
     return () => clearTimeout(timer);
   };
 
-  const changeColor=(value)=>{
+  const changeColor=(value,index)=>{
     if(value==="موجود"){
-      document.getElementById("customerVisit").style.backgroundColor="green"
+      document.getElementById("customerVisit"+index).style.backgroundColor="green"
     }
     if(value==="غير موجود"){
-      document.getElementById("customerVisit").style.backgroundColor="red"
+      document.getElementById("customerVisit"+index).style.backgroundColor="red"
     }
   }
   useEffect(() => {
     setValuesForSelectedDay([]);
     setVisitID("");
     getSelectedDayData();
-    console.log(todayDateSelected)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todayDateSelected]);
   const getSelectedDayData = async () => {
@@ -133,14 +132,14 @@ const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
                       <td>
                         <Select
                           disabled={isAdmin}
-                          id="customerVisit"
+                          id={"customerVisit"+index}
                           variant="filled"
                           defaultValue={item.customerVisit}
                           name="customerVisit"
                           onChange={(e) =>
-                            {handleSelect(e, index, "customerVisit");changeColor(e.target.value)}
+                            {handleSelect(e, index, "customerVisit");changeColor(e.target.value,index)}
                           }
-                          style={{ width: "100%",color:'white',backgroundColor:item.customerVisit==="موجود"?'green':'red'}}
+                          style={{ width: "100%",color:'white',backgroundColor: item.customerVisit != '' ? item.customerVisit==="موجود"?'green':'red': ''}}
                         >
                           <MenuItem  value={"موجود"}>موجود</MenuItem>
                           <MenuItem  value={"غير موجود"}>غير موجود</MenuItem>

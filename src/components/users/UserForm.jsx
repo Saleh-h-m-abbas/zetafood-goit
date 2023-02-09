@@ -63,7 +63,6 @@ const AddUser = () => {
     querySnapshot.forEach((doc) => {
       userArray.push({ id: doc.id, name: doc.get("username") });
     });
-    console.log(userArray)
     setUsersList(userArray);
   };
 
