@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   query,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { makeStyles } from '@material-ui/core/styles';
@@ -28,7 +29,7 @@ const useStyles = makeStyles({
     overflowY: 'auto',
   }
 });
-const UserDataTableInfo = ({ userId }) => {
+const UserDataTableInfo = ({ userId, getCustomers }) => {
   const [data, setData] = useState([]);
   const classes = useStyles();
   const [customersList, setCustomersList] = useState([]);
@@ -39,7 +40,7 @@ const UserDataTableInfo = ({ userId }) => {
     const item = snapshot.data().customerListByDay;
     setData(item);
   }
-  const getCustomers = async () => {
+  const getCustomersForName = async () => {
     if (customersList.length == 0) {
       const userArray = [];
       const q = query(collection(db, "customers"));
@@ -52,9 +53,26 @@ const UserDataTableInfo = ({ userId }) => {
   };
 
   useEffect(() => {
-    getCustomers()
+    getCustomersForName()
     getData()
   }, [userId]);
+
+  const deleteCustomers = async (item, cUid) => {
+    const newMap = data.filter((e) => e.day !== item.day);
+    const newMapOfDay = data.filter((e) => e.day === item.day);
+    newMapOfDay[0].customers.pop(cUid)
+    newMap.push(newMapOfDay[0])
+    const frankDocRef = doc(db, "users", userId);
+    try {
+      await updateDoc(frankDocRef, {
+        customerListByDay: newMap,
+      });
+      getCustomers(userId)
+    } catch (e) {
+      console.log(e)
+    }
+    setData(newMap)
+  }
 
   return (
     <div className="datatable">
@@ -75,7 +93,7 @@ const UserDataTableInfo = ({ userId }) => {
                 <TableCell style={{ textAlign: 'right' }}>{item.day}</TableCell>
                 <TableCell style={{ textAlign: 'right' }} >
                   <div className={classes.scrollableCell}>
-                    {customersList&&item.customers.map((e) => <div>{customersList.find((x) => x.uid === e).name ?? ''}</div>)}
+                    {customersList && item.customers.map((e) => <div style={{ backgroundColor: "white", borderRadius: '10px', boxShadow: '5px 5px 5px #aaaaaa', alignItems: "center", margin: "10px", padding: '10px', display: 'flex', justifyContent: 'space-between' }}><div>{customersList.find((x) => x.uid === e).name ?? ''}</div><button style={{ backgroundColor: "red", color: "white", border: "0px", margin: "5px", padding: '5px', borderRadius: '5px' }} onClick={() => deleteCustomers(item, e)}>Delete</button></div>)}
                   </div>
                 </TableCell>
               </TableRow>

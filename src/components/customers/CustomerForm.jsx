@@ -99,7 +99,7 @@ const AddCustomer = () => {
               (e) => e.id === values.salesperson
             ).name,
             user_create: user.username,
-            saleTaregt: values.saleTarget,
+            saleTarget: values.saleTarget,
           });
           values.username = "";
           values.salesperson = "";

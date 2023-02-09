@@ -86,6 +86,7 @@ const Login = () => {
         navitage("/");
       })
       .catch((error) => {
+        console.log(error);
         setLoginError("Something Wrong Please Try Again");
       });
   };

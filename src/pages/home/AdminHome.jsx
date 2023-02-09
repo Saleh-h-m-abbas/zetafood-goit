@@ -5,31 +5,24 @@ import Box from "@mui/material/Box";
 import { Sidebar } from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import dayjs from "dayjs";
-import HomeInputs from "../../components/homeinputs/HomeInputs";
-import { Button, Select } from "@material-ui/core";
+import {  Select } from "@material-ui/core";
 import {
-  addDoc,
-  arrayUnion,
   collection,
   doc,
   getDoc,
   getDocs,
   query,
-  serverTimestamp,
-  setDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import SelectedCustomerDataTable from "../../components/datatable/SelectedCustomerDataTable";
 import { CustomLoading } from "../../components/actions/CustomLoading";
-import CustomAlert from "../../components/actions/CustomAlert";
 import { Grid, MenuItem, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
 const AdminHome = () => {
   const date = new Date();
   const [salesUsersList, setSalesUsersList] = useState([]);
   const [salesUserSelected, setSalesUserSelected] = useState("");
-  const [errorNoCustomer, setErrorNoCustomer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [datePickerValue, setDatePickerValue] = useState(
     dayjs(
@@ -43,15 +36,7 @@ const AdminHome = () => {
     "-" +
     datePickerValue.$d.getDate();
   const [user, setUser] = useState([]);
-  var days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+ 
 
   useEffect(() => {
     getSalesUsers();

@@ -1,5 +1,5 @@
 export const customerDatatable = [
-  { field: "id", headerName: "الرقم التعريفي", width: 200 },
+  // { field: "id", headerName: "الرقم التعريفي", width: 200 },
   { field: "name", headerName: "اسم الزبون", width: 300 },
   { field: "saleTarget", headerName: "الهدف الشهري", width: 120 },
   { field: "sales_manager_name", headerName: "اسم مسؤول المبيعات", width: 200 },
@@ -9,19 +9,18 @@ export const customerDatatable = [
     width: 140,
     renderCell: (params) => {
       return (
-        <div>{`${
-          params.row.createdAt
+        <div>{`${params.row.createdAt
             ? params.row.createdAt.toDate().toDateString()
             : ""
-        }`}</div>
+          }`}</div>
       );
     },
   },
 ];
 
 export const userDatatable = [
-  { field: "uid", headerName: "الرقم", width: 250 },
-  { field: "username", headerName: "اسم المستخدم", width: 100 },
+  // { field: "uid", headerName: "الرقم", width: 250 },
+  { field: "username", headerName: "اسم المستخدم", width: 300 },
   { field: "email", headerName: "الايميل", width: 200 },
   { field: "superName", headerName: "اسم المشرف", width: 200 },
   {
@@ -30,13 +29,12 @@ export const userDatatable = [
     width: 200,
     renderCell: (params) => {
       return (
-        <div>{`${
-          params.row.role === 0
+        <div>{`${params.row.role === 0
             ? "مدير"
             : params.row.role === 1
-            ? "مشرف"
-            : "مندوب"
-        }`}</div>
+              ? "مشرف"
+              : "مندوب"
+          }`}</div>
       );
     },
   },
@@ -46,11 +44,10 @@ export const userDatatable = [
     width: 200,
     renderCell: (params) => {
       return (
-        <div>{`${
-          params.row.createdAt
+        <div>{`${params.row.createdAt
             ? params.row.createdAt?.toDate().toDateString()
             : ""
-        }`}</div>
+          }`}</div>
       );
     },
   },

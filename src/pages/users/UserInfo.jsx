@@ -129,7 +129,10 @@ function UserInfo() {
     try {
       if (exist) {
         const newMap = map.filter((e) => e.day !== values.day);
-        newMap.push(values);
+        const newMapOfDay = map.filter((e) => e.day === values.day);
+        values.customers.map((e)=>{newMapOfDay[0].customers.push(e)})
+        newMap.push(newMapOfDay[0])
+
         const frankDocRef = doc(db, "users", nameValue);
         await updateDoc(frankDocRef, {
           customerListByDay: newMap,
@@ -268,7 +271,7 @@ function UserInfo() {
           </Formik>
         </Box>
 
-        <UserDataTableInfo userId={nameValue} />
+        <UserDataTableInfo userId={nameValue} getCustomers={getCustomers} />
       </div>
 
     </>

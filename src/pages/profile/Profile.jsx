@@ -47,7 +47,6 @@ const ProfilePage = () => {
   const classes = useStyles();
   const [isAlert, setIsAlert] = useState(false);
   const user = JSON.parse(localStorage.getItem("userInfo"));
-  console.log(user.role)
   return (
     <>
       <Navbar />
