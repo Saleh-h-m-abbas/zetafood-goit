@@ -19,6 +19,7 @@ import SelectedCustomerDataTable from "../../components/datatable/SelectedCustom
 import { CustomLoading } from "../../components/actions/CustomLoading";
 import { Grid, MenuItem, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
+import FileUploadDownload from "../files/FileUploadDownload";
 const AdminHome = () => {
   const date = new Date();
   const [salesUsersList, setSalesUsersList] = useState([]);
@@ -64,6 +65,7 @@ const AdminHome = () => {
   return (
     <>
       <Navbar />
+      {/* <FileUploadDownload /> */}
       <Box sx={{ display: "flex" }}>
         <Box sx={{ flexGrow: 1, p: 1, direction: "rtl" }}>
           <Typography sx={{ fontWeight: "bold" }}>
