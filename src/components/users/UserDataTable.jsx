@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { userDatatable } from "../datatable/datatablesource";
+import  UserUpdateButton from "./UserUpdateButton";
 
 const UserDataTable = () => {
   const [data, setData] = useState([]);
@@ -47,6 +48,7 @@ const UserDataTable = () => {
         return (
           <div className="cellAction">
             {/* <UpdateModelUsers /> */}
+            <UserUpdateButton userId={params.row.username}/>
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row.id)}

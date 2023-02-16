@@ -89,4 +89,24 @@
     }
 
   }
+
+  .customer {
+    background-color: "white";
+    border-Radius: "10px";
+    box-Shadow: "5px 5px 5px #aaaaaa";
+    align-Items: "center";
+    margin: "10px";
+    padding: "10px";
+    display: "flex";
+    justify-Content: "space-between";
+  }
+
+  .buttondeletecustomer {
+    background-Color: "red";
+    color: "white";
+    border: "0px";
+    margin: "5px";
+    padding: "5px";
+    border-Radius: "5px";
+  }
 }

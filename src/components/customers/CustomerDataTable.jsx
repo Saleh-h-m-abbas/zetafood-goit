@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { UpdateSalaryButton } from "../buttons/UpdateSalaryButton";
+import  CustomerFormButton  from "./CustomerFormButton";
 import { customerDatatable } from "../datatable/datatablesource";
 import { UpdateModelCustomers } from "../model/UpdateModelCustomers";
 
@@ -49,12 +50,13 @@ const CustomerDataTable = () => {
           <div className="cellAction">
             <UpdateSalaryButton customerId={params.row.id} />
             {/* <UpdateModelCustomers customerId={params.row} /> */}
+            <CustomerFormButton />
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row.id)}
             >
               حذف
-            </div>
+            </div>  
           </div>
         );
       },
