@@ -57,7 +57,7 @@ export default function Navbar() {
   const [user] = useState(JSON.parse(localStorage.getItem("userInfo")));
 
 
-   
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -79,25 +79,30 @@ export default function Navbar() {
                 الرئيسية
               </Button>
             </Link>
-            {user.role === 0 && 
-            <>
-            <Link to="/customers" className={classes.link}>
-              <Button className={classes.button}>
-                الزبائن
-              </Button>
-            </Link>
-            <Link to="/users" className={classes.link}>
-              <Button className={classes.button}>
-                المستخدمين
-              </Button>
-            </Link>
-            <Link to="/userInfo" className={classes.link}>
-              <Button className={classes.button}>
-                تحديد الزبائن
-              </Button>
-            </Link>
-            </>
+            {(user.role === 0 || user.role === 1) &&
+              <>
+                <Link to="/customers" className={classes.link}>
+                  <Button className={classes.button}>
+                    الزبائن
+                  </Button>
+                </Link>
+              </>
             }
+            {user.role === 0 &&
+              <>
+                <Link to="/users" className={classes.link}>
+                  <Button className={classes.button}>
+                    المستخدمين
+                  </Button>
+                </Link>
+                <Link to="/userInfo" className={classes.link}>
+                  <Button className={classes.button}>
+                    تحديد الزبائن
+                  </Button>
+                </Link>
+              </>
+            }
+
           </Typography>
           <Typography >{user.username}</Typography>
           <div>

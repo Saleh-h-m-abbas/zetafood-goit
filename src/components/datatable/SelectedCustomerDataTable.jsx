@@ -20,7 +20,7 @@ import { db } from "../../firebase";
 import CustomAlert from "../actions/CustomAlert";
 import { CustomLoading } from "../actions/CustomLoading";
 
-const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
+const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAlert, setIsAlert] = useState(false);
   const [visitId, setVisitID] = useState("");
@@ -50,20 +50,35 @@ const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
     }, 10000);
     return () => clearTimeout(timer);
   };
+  const dates = [];
+  const getSaturdaysOfMonth = () => {
 
-  const changeColor=(value,index)=>{
-    if(value==="موجود"){
-      document.getElementById("customerVisit"+index).style.backgroundColor="green"
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const date = new Date(year, month, 1);
+    while (date.getMonth() === month) {
+      if (date.getDay() === 6) { // Saturday is day 6 in JS
+        dates.push(new Date(date.getTime()));
+      }
+      date.setDate(date.getDate() + 1);
     }
-    if(value==="غير موجود"){
-      document.getElementById("customerVisit"+index).style.backgroundColor="red"
+    return dates;
+  }
+
+  const changeColor = (value, index) => {
+    if (value === "موجود") {
+      document.getElementById("customerVisit" + index).style.backgroundColor = "green"
+    }
+    if (value === "غير موجود") {
+      document.getElementById("customerVisit" + index).style.backgroundColor = "red"
     }
   }
   useEffect(() => {
     setValuesForSelectedDay([]);
     setVisitID("");
     getSelectedDayData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todayDateSelected]);
   const getSelectedDayData = async () => {
     try {
@@ -82,6 +97,8 @@ const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
       console.log(error);
     }
   };
+  const saturdays = getSaturdaysOfMonth();
+
   return (
     <>
       <div>
@@ -98,10 +115,10 @@ const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
           <>
 
             <form onSubmit={handleSubmit}>
-              {!isAdmin&&<div className="buttonspace">
+              {!isAdmin && <div className="buttonspace">
                 <input type="submit" className="updateButton" value={"حفظ"} />
               </div>}
-              <Table style={{marginTop:'10px'}}>
+              <Table style={{ marginTop: '10px' }}>
                 <thead>
                   <tr>
                     <th className="tr">اسم الزبون </th>
@@ -109,6 +126,9 @@ const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
                     <th className="tr">الزيارة المندوب</th>
                     <th className="tr">الهدف من الزيارة</th>
                     <th className="tr">ملاحظات المندوب</th>
+                    {dates.map((e) => <>
+                      <th className="tr">1</th>
+                      <th className="tr">2</th></>)}
                   </tr>
                 </thead>
                 {valuesForSelectedDay.map((item, index) => (
@@ -132,22 +152,21 @@ const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
                       <td>
                         <Select
                           disabled={isAdmin}
-                          id={"customerVisit"+index}
+                          id={"customerVisit" + index}
                           variant="filled"
                           defaultValue={item.customerVisit}
                           name="customerVisit"
-                          onChange={(e) =>
-                            {handleSelect(e, index, "customerVisit");changeColor(e.target.value,index)}
+                          onChange={(e) => { handleSelect(e, index, "customerVisit"); changeColor(e.target.value, index) }
                           }
-                          style={{ width: "100%",color:'white',backgroundColor: item.customerVisit != '' ? item.customerVisit==="موجود"?'green':'red': ''}}
+                          style={{ width: "100%", color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "موجود" ? 'green' : 'red' : '' }}
                         >
-                          <MenuItem  value={"موجود"}>موجود</MenuItem>
-                          <MenuItem  value={"غير موجود"}>غير موجود</MenuItem>
+                          <MenuItem value={"موجود"}>موجود</MenuItem>
+                          <MenuItem value={"غير موجود"}>غير موجود</MenuItem>
                         </Select>
                       </td>
                       <td>
                         <Select
-                         disabled={isAdmin}
+                          disabled={isAdmin}
                           variant="filled"
                           defaultValue={item.visitGoal}
                           name="visitGoal"
@@ -160,7 +179,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
                       </td>
                       <td>
                         <TextField
-                         disabled={isAdmin}
+                          disabled={isAdmin}
                           fullWidth
                           variant="filled"
                           multiline
@@ -169,6 +188,30 @@ const SelectedCustomerDataTable = ({ todayDateSelected,userId,isAdmin }) => {
                           defaultValue={item.note}
                           onChange={(e) => handleSelect(e, index, "note")}
                         />
+                      </td>
+                      <td>
+                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
+                      </td>
+                      <td>
+                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
+                      </td>
+                      <td>
+                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
+                      </td>
+                      <td>
+                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
+                      </td>
+                      <td>
+                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
+                      </td>
+                      <td>
+                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
+                      </td>
+                      <td>
+                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
+                      </td>
+                      <td>
+                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
                       </td>
                     </tr>
                   </tbody>

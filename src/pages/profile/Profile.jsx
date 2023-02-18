@@ -83,7 +83,7 @@ const ProfilePage = () => {
               const docSnap = await getDoc(docRef);
               if (docSnap.exists()) {
                 localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
-              } 
+              }
               setIsAlert(true);
               const timer = setTimeout(() => {
                 setIsAlert(false);
@@ -122,6 +122,7 @@ const ProfilePage = () => {
 
                 />
                 <Field
+                  disabled
                   variant="filled"
                   className={classes.input}
                   type="email"
@@ -140,7 +141,7 @@ const ProfilePage = () => {
                   }}
                 />
                 <Field
-
+                  disabled
                   variant="filled"
                   className={classes.input}
                   as={Select}
@@ -148,7 +149,7 @@ const ProfilePage = () => {
                   label="الصلاحيات"
                   fullWidth
                   displayEmpty
-                  disabled={user.role !== 0 ? true : false}
+                // disabled={user.role !== 0 ? true : false}
                 >
                   <MenuItem value="" disabled>
                     الصلاحيات
@@ -170,6 +171,9 @@ const ProfilePage = () => {
                   }}
                 >
                   حفظ التغييرات
+                </Button>
+                <Button >
+                  تغير كلمة السر
                 </Button>
               </Form>
               <div style={{ marginTop: '15px', color: 'green' }}>{isAlert && <CustomAlert severity="success"  > تم تخزين البيانات بنجاح</CustomAlert>}</div>

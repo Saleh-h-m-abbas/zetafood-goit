@@ -4,6 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Grid from "@mui/material/Grid";
 import { CalendarPicker } from "@mui/x-date-pickers/CalendarPicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import FileUploadDownload from "../../pages/files/FileUploadDownload";
 
 const isWeekend = (date) => {
   const day = date.day();
@@ -39,6 +40,7 @@ export const Sidebar = ({ datePickerValue, setDatePickerValue }) => {
           <CalendarPicker date={datePickerValue} shouldDisableDate={isWeekend} onChange={(newDate) => setDatePickerValue(newDate)} />
         </Grid>
       </Grid>
+      <FileUploadDownload />
       </div>
     </LocalizationProvider>
     </>
