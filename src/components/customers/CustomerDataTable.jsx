@@ -5,13 +5,16 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
+  query,
+  updateDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { UpdateSalaryButton } from "../buttons/UpdateSalaryButton";
-import  CustomerFormButton  from "./CustomerFormButton";
 import { customerDatatable } from "../datatable/datatablesource";
-import { UpdateModelCustomers } from "../model/UpdateModelCustomers";
+import UpdateCustomer from "./UpdateCustomer";
 
 const CustomerDataTable = () => {
   const [data, setData] = useState([]);
@@ -21,8 +24,8 @@ const CustomerDataTable = () => {
     const sub = onSnapshot(
       collection(db, "customers"),
       (snapShot) => {
-        let list = snapShot.docs.map(doc=>{
-          return {...doc.data(),id: doc.id}
+        let list = snapShot.docs.map(doc => {
+          return { ...doc.data(), id: doc.id }
         })
         setData(list);
       },
@@ -32,10 +35,27 @@ const CustomerDataTable = () => {
     );
     return sub;
   }, []);
-  const handleDelete = async (id) => {
+  const handleDelete = async (parms) => {
     try {
-      await deleteDoc( doc(db, "customers", id));
-      setData(data.filter((item) => item.id !== id));
+      // console.log(parms.sales_manager_id)
+      // console.log(parms.id)
+      const userArray = [];
+      const q = query(collection(db, "users"), where("uid", "==", parms.sales_manager_id));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        userArray.push({ id: doc.data().uid, customerListByDay: doc.get("customerListByDay") });
+      });
+      // console.log(userArray[0].customerListByDay)
+      const newArray = userArray[0].customerListByDay
+        .map((obj) => ({ ...obj, customers: obj.customers.filter((num) => num !== parms.id) }));
+
+      // console.log(newArray);
+      const frankDocRef = doc(db, "users", parms.sales_manager_id);
+      await updateDoc(frankDocRef, {
+        customerListByDay: newArray,
+      });
+      await deleteDoc(doc(db, "customers", parms.id));
+      setData(data.filter((item) => item.id !== parms.id));
     } catch (err) {
       console.log(err);
     }
@@ -49,14 +69,13 @@ const CustomerDataTable = () => {
         return (
           <div className="cellAction">
             <UpdateSalaryButton customerId={params.row.id} />
-            {/* <UpdateModelCustomers customerId={params.row} /> */}
-            <CustomerFormButton />
+            <UpdateCustomer customerData={params.row} />
             <div
               className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleDelete(params.row)}
             >
               حذف
-            </div>  
+            </div>
           </div>
         );
       },

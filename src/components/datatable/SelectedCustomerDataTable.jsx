@@ -78,6 +78,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
     setValuesForSelectedDay([]);
     setVisitID("");
     getSelectedDayData();
+    console.log(dates)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todayDateSelected]);
   const getSelectedDayData = async () => {
@@ -126,9 +127,10 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                     <th className="tr">الزيارة المندوب</th>
                     <th className="tr">الهدف من الزيارة</th>
                     <th className="tr">ملاحظات المندوب</th>
-                    {dates.map((e) => <>
-                      <th className="tr">1</th>
-                      <th className="tr">2</th></>)}
+                    {dates.map((e,index) => <>
+                      <th className="tr">W{index+1}</th>
+                      {/* <th className="tr">s2</th> */}
+                    </>)}
                   </tr>
                 </thead>
                 {valuesForSelectedDay.map((item, index) => (
@@ -189,30 +191,11 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                           onChange={(e) => handleSelect(e, index, "note")}
                         />
                       </td>
-                      <td>
-                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
-                      </td>
-                      <td>
-                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
-                      </td>
-                      <td>
-                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
-                      </td>
-                      <td>
-                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
-                      </td>
-                      <td>
-                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
-                      </td>
-                      <td>
-                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
-                      </td>
-                      <td>
-                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
-                      </td>
-                      <td>
-                        <p style={{ width: "30px",height:'20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
-                      </td>
+                      {dates.map((e) => <>
+                        <td>
+                          <p style={{ width: "30px", height: '20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
+                        </td>
+                      </>)}
                     </tr>
                   </tbody>
                 ))}
