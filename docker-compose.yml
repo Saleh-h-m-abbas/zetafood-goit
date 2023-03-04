@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
     
     ports:
-      - "93:3000"
+      - "80:3000"
    
     volumes:
       - "/app"
