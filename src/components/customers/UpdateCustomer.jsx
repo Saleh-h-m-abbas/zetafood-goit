@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddCustomer = () => {
+const UpdateCustomer = ({customerData}) => {
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -76,9 +76,8 @@ const AddCustomer = () => {
     setUsersList(userArray);
   };
   useEffect(() => {
-    getSales();
-    
-  }, []);
+    getSales()
+  }, [customerData]);
   return (
     <>
       <Button
@@ -92,7 +91,7 @@ const AddCustomer = () => {
           <h2 className={classes.title}>اضافة زبون</h2>
           <div className={classes.line}></div>
           <Formik
-            initialValues={{ username: "", salesperson: "", saleTarget: '' }}
+            initialValues={{ username: customerData.name, salesperson: customerData.sales_manager_id, saleTarget: Number(customerData.saleTarget) }}
             validate={(values) => {
               const errors = {};
               if (!values.username) {
@@ -107,27 +106,24 @@ const AddCustomer = () => {
               return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              const addCustomer = await addDoc(collection(db, "customers"), {
-                createdAt: serverTimestamp(),
-                name: values.username,
-                sales_manager_id: values.salesperson,
-                sales_manager_name: usersList.find(
-                  (e) => e.id === values.salesperson
-                ).name,
-                user_create: user.username,
-                saleTarget: values.saleTarget,
-              });
+              await setDoc(
+                doc(db, "customers", customerData.id),
+                {
+                  uid: customerData.id,
+                  name: values.username,
+                  sales_manager_id: values.salesperson,
+                  sales_manager_name: usersList.find(
+                    (e) => e.id === values.salesperson
+                  ).name,
+                  saleTarget: values.saleTarget
+                },
+                { merge: true }
+              );
               values.username = "";
               values.salesperson = "";
               values.saleTarget = '';
               setSubmitting(true);
-              await setDoc(
-                doc(db, "customers", addCustomer.id),
-                {
-                  uid: addCustomer.id,
-                },
-                { merge: true }
-              );
+              setOpen(false);
             }}
           >
             {({ touched, errors }) => (
@@ -189,7 +185,7 @@ const AddCustomer = () => {
                   fullWidth
                   className={classes.addButton}
                 >
-                  اضافة
+                  تعديل
                 </Button>
               </Form>
             )}
@@ -200,4 +196,4 @@ const AddCustomer = () => {
   );
 };
 
-export default AddCustomer;
+export default UpdateCustomer;

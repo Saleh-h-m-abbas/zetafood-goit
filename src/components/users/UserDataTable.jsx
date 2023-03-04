@@ -7,9 +7,10 @@ import {
   doc,
   onSnapshot,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { userDatatable } from "../datatable/datatablesource";
 import  UserUpdateButton from "./UserUpdateButton";
+import { getAuth } from "firebase/auth";
 
 const UserDataTable = () => {
   const [data, setData] = useState([]);
@@ -32,9 +33,11 @@ const UserDataTable = () => {
   }, []);
   const handleDelete = async (id) => {
     try {
-      await deleteDoc( doc(db, "users", id));
-      
-      setData(data.filter((item) => item.id !== id));
+      // await deleteDoc( doc(db, "users", id));
+      console.log(id)
+      // const user = auth.currentUser;
+
+      // setData(data.filter((item) => item.id !== id));
     } catch (err) {
       console.log(err);
     }

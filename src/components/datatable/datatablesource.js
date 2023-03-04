@@ -20,7 +20,7 @@ export const customerDatatable = [
 
 export const userDatatable = [
   // { field: "uid", headerName: "الرقم", width: 250 },
-  { field: "username", headerName: "اسم المستخدم", width: 300 },
+  { field: "username", headerName: "اسم المستخدم", width: 200 },
   { field: "email", headerName: "الايميل", width: 200 },
   { field: "superName", headerName: "اسم المشرف", width: 200 },
   {
