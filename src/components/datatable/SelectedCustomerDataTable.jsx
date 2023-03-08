@@ -20,10 +20,11 @@ import { db } from "../../firebase";
 import CustomAlert from "../actions/CustomAlert";
 import { CustomLoading } from "../actions/CustomLoading";
 
-const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
+const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePickerValue }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAlert, setIsAlert] = useState(false);
   const [visitId, setVisitID] = useState("");
+  const [id, setId] = useState([]);
   const [valuesForSelectedDay, setValuesForSelectedDay] = useState([]);
 
   const handleChange = (e, index, key) => {
@@ -52,18 +53,39 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
   };
   const dates = [];
   const getSaturdaysOfMonth = () => {
-    console.log(todayDateSelected)
-    const now = new Date(todayDateSelected);
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const date = new Date(year, month, 1);
-    while (date.getMonth() === month) {
-      if (date.getDay() === 3) { // Saturday is day 6 in JS
-        dates.push(new Date(date.getTime()));
+    // console.log(todayDateSelected)
+    // const now = new Date('2023-03-08');
+    // const date = new Date(now.getFullYear(), now.getMonth(), now.getDay());
+
+    // console.log("date")
+    // console.log(date)
+    // while (date.getMonth() === month) {
+    //   if (date.getDay() === 3) { // Saturday is day 6 in JS
+    //     dates.push(new Date(date.getTime()));
+    //   }
+    //   date.setDate(date.getDate() + 1);
+    // }
+    // return dates;
+
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    const selectedDayOfWeek = datePickerValue.$d.getDay();
+
+    const similarDays = [];
+
+    for (let i = 1; i <= new Date(currentYear, currentMonth + 1, 0).getDate(); i++) {
+      const currentDate = new Date(currentYear, currentMonth, i);
+      if (currentDate.getDay() === selectedDayOfWeek) {
+        dates.push(currentDate);
       }
-      date.setDate(date.getDate() + 1);
     }
-    return dates;
+    console.log(dates)
+    return similarDays;
+  }
+
+  const getDataFromUsers = (selectedDate, customerId) => {
+      
+
   }
 
   const changeColor = (value, index) => {
@@ -77,8 +99,10 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
   useEffect(() => {
     setValuesForSelectedDay([]);
     setVisitID("");
+    console.log(id)
     getSelectedDayData();
-    console.log(dates)
+    // console.log(dates)
+    // console.log(datePickerValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todayDateSelected]);
   const getSelectedDayData = async () => {
@@ -127,8 +151,8 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                     <th className="tr">الزيارة المندوب</th>
                     <th className="tr">الهدف من الزيارة</th>
                     <th className="tr">ملاحظات المندوب</th>
-                    {dates.map((e,index) => <>
-                      <th className="tr">W{index+1}</th>
+                    {dates.map((e, index) => <>
+                      <th className="tr">W{index + 1}</th>
                       {/* <th className="tr">s2</th> */}
                     </>)}
                   </tr>
@@ -191,9 +215,12 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                           onChange={(e) => handleSelect(e, index, "note")}
                         />
                       </td>
-                      {dates.map((e) => <>
+                      {dates.map((e,index) => <>
                         <td>
-                          <p style={{ width: "30px", height: '20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p>
+                          <p
+                            onChange={console.log(item.customerId,item.customerName,dates[index])}
+                          />
+                          {/* <p style={{ width: "30px", height: '20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p> */}
                         </td>
                       </>)}
                     </tr>

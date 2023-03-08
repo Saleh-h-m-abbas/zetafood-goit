@@ -83,7 +83,7 @@ const Home = () => {
         (item) => item.day === dayName
       ).customers;
       result.forEach((e) => {
-        if(customersList.find((x) => x.uid === e)){
+        if (customersList.find((x) => x.uid === e)) {
           customersListSelected.push({
             customerId: e,
             customerName: customersList.find((x) => x.uid === e).name,
@@ -101,8 +101,8 @@ const Home = () => {
           dateOfVisit: todayDateSelected,
           day: dayName,
           listOfCustomers: customersListSelected,
-          superId: user.superId??'',
-          superName: user.superName??'',
+          superId: user.superId ?? '',
+          superName: user.superName ?? '',
           userUsername: user.username,
           userId: user.uid,
         });
@@ -136,7 +136,7 @@ const Home = () => {
         setErrorNoCustomer(false);
       }, 10000);
       return () => clearTimeout(timer);
-     
+
     }
   };
 
@@ -157,6 +157,7 @@ const Home = () => {
                   todayDateSelected={todayDateSelected}
                   userId={user.uid}
                   isAdmin={false}
+                  datePickerValue={datePickerValue}
                 />
               ) : (
                 <Box mt={5}>
