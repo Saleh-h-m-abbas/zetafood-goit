@@ -83,14 +83,16 @@ const Home = () => {
         (item) => item.day === dayName
       ).customers;
       result.forEach((e) => {
-        customersListSelected.push({
-          customerId: e,
-          customerName: customersList.find((x) => x.uid === e).name,
-          saleTarget: customersList.find((x) => x.uid === e).saleTarget ?? 0,
-          customerVisit: "",
-          visitGoal: "",
-          note: "",
-        });
+        if(customersList.find((x) => x.uid === e)){
+          customersListSelected.push({
+            customerId: e,
+            customerName: customersList.find((x) => x.uid === e).name,
+            saleTarget: customersList.find((x) => x.uid === e).saleTarget ?? 0,
+            customerVisit: "",
+            visitGoal: "",
+            note: "",
+          });
+        }
       });
       try {
         await addDoc(collection(db, "visitInformation"), {

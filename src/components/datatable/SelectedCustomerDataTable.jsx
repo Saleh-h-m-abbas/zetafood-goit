@@ -52,13 +52,13 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
   };
   const dates = [];
   const getSaturdaysOfMonth = () => {
-
-    const now = new Date();
+    console.log(todayDateSelected)
+    const now = new Date(todayDateSelected);
     const year = now.getFullYear();
     const month = now.getMonth();
     const date = new Date(year, month, 1);
     while (date.getMonth() === month) {
-      if (date.getDay() === 6) { // Saturday is day 6 in JS
+      if (date.getDay() === 3) { // Saturday is day 6 in JS
         dates.push(new Date(date.getTime()));
       }
       date.setDate(date.getDate() + 1);
