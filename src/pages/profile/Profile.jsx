@@ -172,9 +172,9 @@ const ProfilePage = () => {
                 >
                   حفظ التغييرات
                 </Button>
-                <Button >
+                {/* <Button >
                   تغير كلمة السر
-                </Button>
+                </Button> */}
               </Form>
               <div style={{ marginTop: '15px', color: 'green' }}>{isAlert && <CustomAlert severity="success"  > تم تخزين البيانات بنجاح</CustomAlert>}</div>
             </Box>

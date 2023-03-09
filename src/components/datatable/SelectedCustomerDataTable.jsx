@@ -24,9 +24,9 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
   const [isLoading, setIsLoading] = useState(true);
   const [isAlert, setIsAlert] = useState(false);
   const [visitId, setVisitID] = useState("");
-  const [id, setId] = useState([]);
   const [valuesForSelectedDay, setValuesForSelectedDay] = useState([]);
-
+  const [dates, setDates] = useState([])
+  const [customerDataForWeek, setCustomerDataForWeek] = useState([]);
   const handleChange = (e, index, key) => {
     const newData = [...valuesForSelectedDay];
     newData[index][key] = e.target.innerText;
@@ -51,41 +51,52 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
     }, 10000);
     return () => clearTimeout(timer);
   };
-  const dates = [];
-  const getSaturdaysOfMonth = () => {
-    // console.log(todayDateSelected)
-    // const now = new Date('2023-03-08');
-    // const date = new Date(now.getFullYear(), now.getMonth(), now.getDay());
 
-    // console.log("date")
-    // console.log(date)
-    // while (date.getMonth() === month) {
-    //   if (date.getDay() === 3) { // Saturday is day 6 in JS
-    //     dates.push(new Date(date.getTime()));
-    //   }
-    //   date.setDate(date.getDate() + 1);
-    // }
-    // return dates;
-
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const selectedDayOfWeek = datePickerValue.$d.getDay();
-
+  const getSimilarDaysDate = async(inputDate) => {
+    const inputDay = inputDate.getDay();
+    const month = inputDate.getMonth();
+    const year = inputDate.getFullYear();
     const similarDays = [];
+    const numberOfDaysInMonth = new Date(year, month + 1, 0).getDate();
 
-    for (let i = 1; i <= new Date(currentYear, currentMonth + 1, 0).getDate(); i++) {
-      const currentDate = new Date(currentYear, currentMonth, i);
-      if (currentDate.getDay() === selectedDayOfWeek) {
-        dates.push(currentDate);
+    for (let day = 1; day <= numberOfDaysInMonth; day++) {
+      const date = new Date(year, month, day);
+      if (date.getDay() === inputDay) {
+        similarDays.push(date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate());
+        await getDataForThisDay(date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate())
       }
     }
-    console.log(dates)
-    return similarDays;
+    setDates(similarDays)
+    console.log(customerDataForWeek)
+    setCustomerDataForWeek([...customerDataForWeek])
+    // console.log(JSON.stringify(customerDataForWeek))
+  };
+  const getDataForThisDay = async (dayDate) => {
+
+    const q = query(
+      collection(db, "visitInformation"),
+      where("dateOfVisit", "==", dayDate),
+      where("userId", "==", userId)
+    );
+    const querySnapshot = await getDocs(q);
+    var x = []
+    querySnapshot.forEach((doc) => {
+      x= doc.data().listOfCustomers
+    });
+    customerDataForWeek.push({ 'date': dayDate, 'customersList': x })
   }
 
-  const getDataFromUsers = (selectedDate, customerId) => {
-      
-
+  // const isNoteFilled = (customerId, date, customerDataForWeek) => {
+  //   const selectedDateCustomers = customerDataForWeek.find((data) => data.date === date)?.customersList || [];
+  
+  //   const selectedCustomer = selectedDateCustomers.find((customer) => customer.customerId === customerId);
+  
+  //   return selectedCustomer?.note !== "";
+  // };
+  const getDataFromUsers = (date, customerId) => {
+    const selectedDateCustomers = customerDataForWeek.find((data) => data.date === date)?.customersList || [];
+    const selectedCustomer = selectedDateCustomers.find((customer) => customer.customerId === customerId);
+    return selectedCustomer?.note !== "";
   }
 
   const changeColor = (value, index) => {
@@ -99,10 +110,9 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
   useEffect(() => {
     setValuesForSelectedDay([]);
     setVisitID("");
-    console.log(id)
     getSelectedDayData();
-    // console.log(dates)
-    // console.log(datePickerValue)
+    setCustomerDataForWeek([])
+    getSimilarDaysDate(new Date(todayDateSelected))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todayDateSelected]);
   const getSelectedDayData = async () => {
@@ -122,7 +132,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
       console.log(error);
     }
   };
-  const saturdays = getSaturdaysOfMonth();
+
 
   return (
     <>
@@ -215,13 +225,11 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
                           onChange={(e) => handleSelect(e, index, "note")}
                         />
                       </td>
-                      {dates.map((e,index) => <>
-                        <td>
-                          <p
-                            onChange={console.log(item.customerId,item.customerName,dates[index])}
-                          />
-                          {/* <p style={{ width: "30px", height: '20px', color: 'white', backgroundColor: item.customerVisit != '' ? item.customerVisit === "/" ? 'green' : 'red' : '' }}>/</p> */}
-                        </td>
+                      {dates.map((e, index) => <>
+                        {customerDataForWeek.length!=0 && getDataFromUsers(dates[index],item.customerId)?
+                        
+                        <td style={{backgroundColor: 'red'}}>X</td>:<td style={{backgroundColor: 'green'}}>Y</td>}
+                        
                       </>)}
                     </tr>
                   </tbody>

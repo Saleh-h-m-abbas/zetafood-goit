@@ -37,19 +37,15 @@ const CustomerDataTable = () => {
   }, []);
   const handleDelete = async (parms) => {
     try {
-      // console.log(parms.sales_manager_id)
-      // console.log(parms.id)
       const userArray = [];
       const q = query(collection(db, "users"), where("uid", "==", parms.sales_manager_id));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         userArray.push({ id: doc.data().uid, customerListByDay: doc.get("customerListByDay") });
       });
-      // console.log(userArray[0].customerListByDay)
       const newArray = userArray[0].customerListByDay
         .map((obj) => ({ ...obj, customers: obj.customers.filter((num) => num !== parms.id) }));
 
-      // console.log(newArray);
       const frankDocRef = doc(db, "users", parms.sales_manager_id);
       await updateDoc(frankDocRef, {
         customerListByDay: newArray,
