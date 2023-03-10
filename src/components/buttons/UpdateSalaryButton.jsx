@@ -59,7 +59,7 @@ export const UpdateSalaryButton = ({customerId}) => {
             <h2 className={classes.title}>تعديل الهدف الشهري</h2>
             <div className={classes.line}></div>
             <Formik
-              initialValues={{ saleTarget: "" }}
+              initialValues={{ saleTarget:customerId.saleTarget }}
               validate={(values) => {
                 const errors = {};
                 if (!values.saleTarget) {
@@ -69,7 +69,7 @@ export const UpdateSalaryButton = ({customerId}) => {
               }}
               onSubmit={async (values, { setSubmitting }) => {
                 await setDoc(
-                    doc(db, "customers", customerId),
+                    doc(db, "customers", customerId.id),
                     {
                       saleTarget: values.saleTarget,
                     },

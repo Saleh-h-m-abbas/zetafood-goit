@@ -52,7 +52,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
     return () => clearTimeout(timer);
   };
 
-  const getSimilarDaysDate = async(inputDate) => {
+  const getSimilarDaysDate = async (inputDate) => {
     const inputDay = inputDate.getDay();
     const month = inputDate.getMonth();
     const year = inputDate.getFullYear();
@@ -67,9 +67,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
       }
     }
     setDates(similarDays)
-    console.log(customerDataForWeek)
     setCustomerDataForWeek([...customerDataForWeek])
-    // console.log(JSON.stringify(customerDataForWeek))
   };
   const getDataForThisDay = async (dayDate) => {
 
@@ -81,22 +79,14 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
     const querySnapshot = await getDocs(q);
     var x = []
     querySnapshot.forEach((doc) => {
-      x= doc.data().listOfCustomers
+      x = doc.data().listOfCustomers
     });
     customerDataForWeek.push({ 'date': dayDate, 'customersList': x })
   }
-
-  // const isNoteFilled = (customerId, date, customerDataForWeek) => {
-  //   const selectedDateCustomers = customerDataForWeek.find((data) => data.date === date)?.customersList || [];
-  
-  //   const selectedCustomer = selectedDateCustomers.find((customer) => customer.customerId === customerId);
-  
-  //   return selectedCustomer?.note !== "";
-  // };
   const getDataFromUsers = (date, customerId) => {
     const selectedDateCustomers = customerDataForWeek.find((data) => data.date === date)?.customersList || [];
     const selectedCustomer = selectedDateCustomers.find((customer) => customer.customerId === customerId);
-    return selectedCustomer?.note !== "";
+    return selectedCustomer?.note !== "" && selectedCustomer;
   }
 
   const changeColor = (value, index) => {
@@ -211,6 +201,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
                         >
                           <MenuItem value={"بيع"}>بيع</MenuItem>
                           <MenuItem value={"تحصيل"}>تحصيل</MenuItem>
+                          <MenuItem value={"بيع + تحصيل"}>بيع + تحصيل</MenuItem>
                         </Select>
                       </td>
                       <td>
@@ -226,10 +217,8 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin, datePic
                         />
                       </td>
                       {dates.map((e, index) => <>
-                        {customerDataForWeek.length!=0 && getDataFromUsers(dates[index],item.customerId)?
-                        
-                        <td style={{backgroundColor: 'red'}}>X</td>:<td style={{backgroundColor: 'green'}}>Y</td>}
-                        
+                        {customerDataForWeek.length != 0 && getDataFromUsers(dates[index], item.customerId) ?
+                          <td style={{ backgroundColor: 'green', color: 'white' }}>Y</td> : <td style={{ backgroundColor: 'red', color: 'white' }}>X</td>}
                       </>)}
                     </tr>
                   </tbody>

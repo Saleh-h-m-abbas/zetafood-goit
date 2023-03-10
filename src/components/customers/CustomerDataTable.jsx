@@ -64,7 +64,7 @@ const CustomerDataTable = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <UpdateSalaryButton customerId={params.row.id} />
+            <UpdateSalaryButton customerId={params.row}  />
             <UpdateCustomer customerData={params.row} />
             <div
               className="deleteButton"
