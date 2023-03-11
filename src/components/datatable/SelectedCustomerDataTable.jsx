@@ -27,14 +27,12 @@ import { CustomLoading } from "../actions/CustomLoading";
 import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   paper: {
-    overflowX: "auto",
     margin: "10px",
     direction: "rtl",
     textAlign: "right",
     border: "1px solid #ddd",
     borderRadius: "5px",
     maxWidth: "100%",
-    overflow: "hidden",
   },
   table: {
     minWidth: "600px",
@@ -205,7 +203,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                 <Table className={classes.table}>
                   <TableHead>
                     <TableRow>
-                      <TableCell className={classes.headerCell}>
+                      <TableCell style={{width:"200px"}} className={classes.headerCell}>
                         اسم الزبون
                       </TableCell>
                       <TableCell className={classes.headerCell}>
@@ -221,7 +219,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                         ملاحظات المندوب
                       </TableCell>
                       {dates.map((e, index) => (
-                        <TableCell key={index} className={classes.headerCell}>
+                        <TableCell key={index}style={{width:"50px"}} className={classes.headerCell}>
                           W{index + 1}
                         </TableCell>
                       ))}
@@ -235,10 +233,10 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                             InputProps={{
                               readOnly: true,
                             }}
-                            style={{ color: "white"}}
-                            fullWidth
+                            style={{color: "white"}}
                             name="customerName"
                             variant="filled"
+                            multiline
                             defaultValue={item.customerName}
                             onInput={(e) =>
                               handleChange(e, index, "customerName")
