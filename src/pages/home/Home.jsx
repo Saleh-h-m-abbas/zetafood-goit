@@ -157,7 +157,6 @@ const Home = () => {
                   todayDateSelected={todayDateSelected}
                   userId={user.uid}
                   isAdmin={false}
-                  datePickerValue={datePickerValue}
                 />
               ) : (
                 <Box mt={5}>

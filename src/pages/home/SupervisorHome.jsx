@@ -19,7 +19,6 @@ import SupervisorDataTable from "../../components/datatable/SupervisorDataTable"
 import { CustomLoading } from "../../components/actions/CustomLoading";
 import { Grid, MenuItem, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
-import FileUploadDownload from "../files/FileUploadDownload";
 
 const SupervisorHome = () => {
   const date = new Date();

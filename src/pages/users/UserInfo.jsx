@@ -80,6 +80,7 @@ const dayList = [
   "Tuesday",
   "Wednesday",
   "Thursday",
+  "Other"
 ];
 
 const validationSchema = Yup.object({

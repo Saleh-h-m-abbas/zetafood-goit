@@ -101,15 +101,31 @@ const UserDataTableInfo = ({ userId, getCustomers }) => {
                           );
                           return customer ? (
                             <div
-                              className="customer"
+                            style={{
+                              backgroundColor: "white",
+                              borderRadius: "10px",
+                              boxShadow: "5px 5px 5px #aaaaaa",
+                              alignItems: "center",
+                              margin: "10px",
+                              padding: "10px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
                             >
                               <div>{customer.name}</div>
                               <button
-                                className="buttondeletecustomer"
-                                onClick={() => deleteCustomers(item, e)}
-                              >
-                                Delete
-                              </button>
+                                 style={{
+                                   backgroundColor: "red",
+                                   color: "white",
+                                   border: "0px",
+                                   margin: "5px",
+                                   padding: "5px",
+                                   borderRadius: "5px",
+                                 }}
+                                 onClick={() => deleteCustomers(item, e)}
+                               >
+                                 Delete
+                               </button>
                             </div>
                           ) : null;
                         })}

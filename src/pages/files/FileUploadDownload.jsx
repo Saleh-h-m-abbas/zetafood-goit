@@ -21,7 +21,7 @@ const FileUploadDownload = () => {
 
       const promises = fileList.items.map(item => getDownloadURL(item));
       const urls = await Promise.all(promises);
-      console.log(urls)
+      // console.log(urls)
       setUrl(
         fileList.items.map((item, i) => ({
           name: item.name,
@@ -47,7 +47,7 @@ const FileUploadDownload = () => {
       () => {
         // download url
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          console.log(url);
+          // console.log(url);
           // setUrl(url)
         });
       }

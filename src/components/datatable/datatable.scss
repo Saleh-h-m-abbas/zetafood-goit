@@ -103,82 +103,85 @@
   direction: ltr;
   justify-content: space-between;
 }
+.container {
+  overflow-x: auto;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 50px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.title {
+  margin-top: 20px;
+  text-align: center;
+}
+
+tr {
+  height: 40px !important;
+}
+
+th {
+  max-width: 125px;
+  min-width: 125px;
+  padding: 0 !important;
+  overflow-x: auto;
+  white-space: nowrap;
+  text-align: center !important;
+}
 
 td {
-  /* set background color */
-  background-color: #f2f2f2;
-
-  /* set text color */
-  color: #333;
-
-  /* set font size */
-  font-size: 14px;
-
-  /* set font family */
-  font-family: Arial, sans-serif;
-
-  /* set border */
-  border: 1px solid #ddd;
-
-  /* set padding */
-  padding: 10px;
-
-  /* set text alignment */
-  text-align: center;
-
-  /* set vertical alignment */
-  vertical-align: middle;
+  height: 40px !important;
+  padding: 5px !important;
+  text-align: center !important;
 }
 
-.tr {
-  background-color: #f2f2f2;
-  line-height: 1.43;
-  letter-spacing: 0.01071em;
-  font-size:18px;
-  /* set font family */
-  font-family: 'Nunito, sans-serif';
+// td {
+//   /* set background color */
+//   // background-color: #f2f2f2;
+//   text-align: right;
+//   /* set text color */
+//   color: #333;
 
-  /* set border */
-  border: 4px solid #ddd;
+//   /* set font size */
+//   font-size: 14px;
 
-  /* set padding */
-  padding: 10px;
+//   /* set font family */
+//   font-family: Arial, sans-serif;
+
+//   /* set border */
+//   border: 1px solid #ddd;
+
+//   /* set padding */
+//   padding: 10px;
+
+//   /* set text alignment */
+//   text-align: center;
+
+//   /* set vertical alignment */
+//   vertical-align: middle;
+// }
+
+// .tr {
+//   background-color: #f2f2f2;
+//   line-height: 1.43;
+//   letter-spacing: 0.01071em;
+//   font-size:18px;
+//   /* set font family */
+//   font-family: 'Nunito, sans-serif';
+
+//   /* set border */
+//   border: 1px solid #ddd;
+
+//   /* set padding */
+//   padding: 10px;
 
 
-  /* set vertical alignment */
-  vertical-align: middle;
+//   /* set vertical alignment */
+//   vertical-align: middle;
 
-  /* set hover effect */
-  transition: all 0.2s ease;
-  direction: rtl;
-}
+//   /* set hover effect */
+//   transition: all 0.2s ease;
+//   direction: rtl;
+// }
 
-.TableCell {
-  /* set background color */
-  background-color: #333;
-
-  /* set text color */
-  color: #333;
-
-  /* set font size */
-  font-size: 14px;
-
-  /* set font family */
-  font-family: Arial, sans-serif;
-
-  /* set border */
-  border: 5px solid #ddd;
-
-  /* set padding */
-  padding: 10px;
-
-  /* set text alignment */
-  text-align: right;
-
-  /* set vertical alignment */
-  vertical-align: middle;
-
-  /* set hover effect */
-  transition: all 0.2s ease;
-  direction: rtl;
-}

@@ -19,7 +19,6 @@ import SelectedCustomerDataTable from "../../components/datatable/SelectedCustom
 import { CustomLoading } from "../../components/actions/CustomLoading";
 import { Grid, MenuItem, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
-import FileUploadDownload from "../files/FileUploadDownload";
 
 const AdminHome = () => {
   const date = new Date();
@@ -155,7 +154,6 @@ const AdminHome = () => {
                   todayDateSelected={todayDateSelected}
                   userId={user.uid}
                   isAdmin={true}
-                  datePickerValue={datePickerValue}
                 />
               ) : (
                 <Box mt={5}>
