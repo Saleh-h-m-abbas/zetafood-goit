@@ -1,11 +1,11 @@
-import "./home.css";
+import "./home.scss";
 import { React, useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Sidebar } from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import dayjs from "dayjs";
-import {  Select } from "@material-ui/core";
+import { Select } from "@material-ui/core";
 import {
   collection,
   doc,
@@ -165,10 +165,12 @@ const AdminHome = () => {
             </>
           )}
         </Box>
+        <div className="hide">
         <Sidebar
           datePickerValue={datePickerValue}
           setDatePickerValue={setDatePickerValue}
         />
+        </div>
       </Box>
     </>
   );
