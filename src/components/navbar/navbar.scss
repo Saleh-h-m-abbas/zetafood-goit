@@ -1,0 +1,18 @@
+@media (min-width: 1290px) {
+    .dropdown-button {
+      display:none;
+    }
+  }
+  
+  .sidebar-wrapper {
+    position:fixed;
+    top: 1;
+    right: 100%;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .sidebar-wrapper.open {
+    right: 0;
+    margin: 140px 5px;
+  }
+  

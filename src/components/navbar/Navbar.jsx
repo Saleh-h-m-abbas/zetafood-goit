@@ -11,6 +11,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
+import "./navbar.scss";
+import { Sidebar } from "../sidebar/Sidebar";
+import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,12 +58,17 @@ export default function Navbar() {
   const navitage = useNavigate();
   const { dispatch } = useContext(AuthContext);
   const [user] = useState(JSON.parse(localStorage.getItem("userInfo")));
-
+  const [isOpen, setIsOpen] = useState(false);
 
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -71,6 +79,12 @@ export default function Navbar() {
       <AppBar position="static" style={{ background: "#003d4d" }}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
+            <button style={{backgroundColor:"#003d4d"}} className="dropdown-button" onClick={toggleDropdown}>
+              <CalendarMonthTwoToneIcon htmlColor="success" />
+            </button>
+            <div className={`sidebar-wrapper ${isOpen ? 'open' : ''}`}>
+              <Sidebar />
+            </div>
             <Link to="/" className={classes.link}>
               ZetaFood
             </Link>

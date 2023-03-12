@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     backgroundColor: theme.palette.grey[100],
     padding: "10px",
+    width: "280hv",
   },
 }));
 const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
@@ -50,6 +51,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
   const [isAlert, setIsAlert] = useState(false);
   const [visitId, setVisitID] = useState("");
   const [valuesForSelectedDay, setValuesForSelectedDay] = useState([]);
+  const user = JSON.parse(localStorage.getItem("userInfo"));
   const [dates, setDates] = useState([]);
   const [customerDataForWeek, setCustomerDataForWeek] = useState([]);
   const handleChange = (e, index, key) => {
@@ -98,17 +100,17 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
       if (date.getDay() === inputDay) {
         similarDays.push(
           date.getFullYear() +
-            "-" +
-            (date.getMonth() + 1) +
-            "-" +
-            date.getDate()
+          "-" +
+          (date.getMonth() + 1) +
+          "-" +
+          date.getDate()
         );
         await getDataForThisDay(
           date.getFullYear() +
-            "-" +
-            (date.getMonth() + 1) +
-            "-" +
-            date.getDate()
+          "-" +
+          (date.getMonth() + 1) +
+          "-" +
+          date.getDate()
         );
       }
     }
@@ -203,7 +205,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                 <Table className={classes.table}>
                   <TableHead>
                     <TableRow>
-                      <TableCell style={{width:"200px"}} className={classes.headerCell}>
+                      <TableCell className={classes.headerCell}>
                         اسم الزبون
                       </TableCell>
                       <TableCell className={classes.headerCell}>
@@ -218,8 +220,11 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                       <TableCell className={classes.headerCell}>
                         ملاحظات المندوب
                       </TableCell>
+                      <TableCell className={classes.headerCell}>
+                        ملاحظات المشرف
+                      </TableCell>
                       {dates.map((e, index) => (
-                        <TableCell key={index}style={{width:"50px"}} className={classes.headerCell}>
+                        <TableCell key={index} style={{ width: "50px" }} className={classes.headerCell}>
                           W{index + 1}
                         </TableCell>
                       ))}
@@ -233,7 +238,7 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                             InputProps={{
                               readOnly: true,
                             }}
-                            style={{color: "white"}}
+                            style={{ color: "white" }}
                             name="customerName"
                             variant="filled"
                             multiline
@@ -306,10 +311,31 @@ const SelectedCustomerDataTable = ({ todayDateSelected, userId, isAdmin }) => {
                             onChange={(e) => handleSelect(e, index, "note")}
                           />
                         </TableCell>
+                        <TableCell>
+                          {user && user.role === 0 ? <TextField
+                            disabled
+                            fullWidth
+                            variant="filled"
+                            multiline
+                            maxRows={4}
+                            name="supervisornote"
+                            defaultValue={item.supervisornote}
+                            onChange={(e) => handleSelect(e, index, "supervisornote")}
+                          /> : <TextField
+                            fullWidth
+                            variant="filled"
+                            multiline
+                            maxRows={4}
+                            name="supervisornote"
+                            defaultValue={item.supervisornote}
+                            onChange={(e) => handleSelect(e, index, "supervisornote")}
+                          />}
+
+                        </TableCell>
                         {dates.map((e, index) => (
                           <>
                             {customerDataForWeek.length != 0 &&
-                            getDataFromUsers(dates[index], item.customerId) ? (
+                              getDataFromUsers(dates[index], item.customerId) ? (
                               <TableCell
                                 style={{
                                   backgroundColor: "green",

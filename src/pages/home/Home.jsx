@@ -1,32 +1,31 @@
-import "./home.css";
+import "./home.scss";
 import { React, useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Sidebar } from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import dayjs from "dayjs";
-import HomeInputs from "../../components/homeinputs/HomeInputs";
-import { Button } from "@material-ui/core";
+import { Select } from "@material-ui/core";
 import {
-  addDoc,
-  arrayUnion,
   collection,
   doc,
   getDoc,
   getDocs,
   query,
-  serverTimestamp,
-  setDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import SelectedCustomerDataTable from "../../components/datatable/SelectedCustomerDataTable";
 import { CustomLoading } from "../../components/actions/CustomLoading";
-import CustomAlert from "../../components/actions/CustomAlert";
-const Home = () => {
+import { Grid, MenuItem, TextField } from "@mui/material";
+import { Stack } from "@mui/system";
+import SelectedCustomerDataTable from "../../components/datatable/SelectedCustomerDataTable";
+
+const SupervisorHome = () => {
   const date = new Date();
-  const [customersList, setCustomersList] = useState([]);
-  const [errorNoCustomer, setErrorNoCustomer] = useState(false);
+  const [salesUsersList, setSalesUsersList] = useState([]);
+  const [salesUserSelected, setSalesUserSelected] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [customerDataForWeek, setCustomerDataForWeek] = useState([]);
   const [datePickerValue, setDatePickerValue] = useState(
     dayjs(
       date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
@@ -38,106 +37,30 @@ const Home = () => {
     (datePickerValue.$d.getMonth() + 1) +
     "-" +
     datePickerValue.$d.getDate();
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("userInfo"))
-  );
-  var days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  const [user, setUser] = useState([]);
+
 
   useEffect(() => {
-    getCustomers();
+    getSalesUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const getCustomers = async () => {
-    if (customersList.length === 0) {
-      const customersArray = [];
-      const q = query(collection(db, "customers"));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        customersArray.push({
-          uid: doc.id,
-          name: doc.get("name"),
-          saleTarget: doc.get("saleTarget"),
-        });
-      });
-      setCustomersList(customersArray);
-    }
+  const getSalesUsers = async () => {
+    const userArray = [];
+    const q = query(collection(db, "users"), where("role", "==", 2));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      userArray.push({ uid: doc.data().uid, username: doc.get("username") });
+    });
+    setSalesUsersList(userArray);
   };
 
-  const newEntry = async () => {
-    setIsLoading(true);
-    setErrorNoCustomer(false);
-    const customersListSelected = [];
-    var dayName = days[datePickerValue.$d.getDay()];
-    const dayListForUser = user.customerListByDay;
-    if (dayListForUser.find((item) => item.day === dayName)) {
-      var result = dayListForUser.find(
-        (item) => item.day === dayName
-      ).customers;
-      result.forEach((e) => {
-        if (customersList.find((x) => x.uid === e)) {
-          customersListSelected.push({
-            customerId: e,
-            customerName: customersList.find((x) => x.uid === e).name,
-            saleTarget: customersList.find((x) => x.uid === e).saleTarget ?? 0,
-            customerVisit: "",
-            visitGoal: "",
-            note: "",
-          });
-        }
-      });
-      try {
-        await addDoc(collection(db, "visitInformation"), {
-          createdAt: serverTimestamp(),
-          createdBy: user.uid,
-          dateOfVisit: todayDateSelected,
-          day: dayName,
-          listOfCustomers: customersListSelected,
-          superId: user.superId ?? '',
-          superName: user.superName ?? '',
-          userUsername: user.username,
-          userId: user.uid,
-        });
-        await setDoc(
-          doc(db, "users", user.uid),
-          {
-            days: arrayUnion(todayDateSelected),
-          },
-          { merge: true }
-        );
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          localStorage.setItem("userInfo", JSON.stringify(docSnap.data()));
-          setUser(JSON.parse(localStorage.getItem("userInfo")));
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-        setErrorNoCustomer(true);
-        const timer = setTimeout(() => {
-          setErrorNoCustomer(false);
-        }, 10000);
-        return () => clearTimeout(timer);
-      }
-    } else {
-      setIsLoading(false);
-      setErrorNoCustomer(true);
-      const timer = setTimeout(() => {
-        setErrorNoCustomer(false);
-      }, 10000);
-      return () => clearTimeout(timer);
 
-    }
+  const getDataForSelectedUser = async (userIdSeletect) => {
+    setIsLoading(true);
+    const docRef = doc(db, "users", userIdSeletect);
+    const snapshot = await getDoc(docRef);
+    setUser(snapshot.data())
+    setIsLoading(false)
   };
 
   return (
@@ -146,50 +69,112 @@ const Home = () => {
       <Box sx={{ display: "flex" }}>
         <Box sx={{ flexGrow: 1, p: 1, direction: "rtl" }}>
           <Typography sx={{ fontWeight: "bold" }}>
-            <HomeInputs datePickerValue={datePickerValue} />
+            <Grid
+              sx={{
+                maxHeight: "350px",
+              }}
+            >
+              <Stack direction={"row"}>
+                <TextField
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  defaultValue=" اليوم والتاريخ:"
+                  variant="filled"
+                  size="small"
+                  disabled
+                />
+                <TextField
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  value={
+                    datePickerValue.$d.toLocaleString("en-us", {
+                      weekday: "long",
+                    }) +
+                    "  " +
+                    datePickerValue.$d.getFullYear() +
+                    "-" +
+                    (datePickerValue.$d.getMonth() + 1) +
+                    "-" +
+                    datePickerValue.$d.getDate()
+                  }
+                  size="small"
+                  disabled
+                />
+              </Stack>
+              <Stack direction={"row"} maxHeight={40}>
+                <TextField
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  defaultValue="المندوب:"
+                  variant="filled"
+                  size="small"
+                  disabled
+                />
+                <Select
+                  disabled={salesUsersList.length === 0}
+                  style={{ width: "200px" }}
+                  label={"اختار مندوب المبيعات"}
+                  value={salesUserSelected}
+                  onChange={(e) => {
+                    setSalesUserSelected(e.target.value);
+                    getDataForSelectedUser(e.target.value);
+                  }}
+                >
+                  {salesUsersList.map((e) => (
+                    <MenuItem value={e.uid}>{e.username}</MenuItem>
+                  ))}
+                </Select>
+              </Stack>
+              <Stack direction={"row"} maxHeight={40} spacing={5}>
+                <TextField
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  defaultValue=" المشرف:"
+                  variant="filled"
+                  size="small"
+                  disabled
+                />
+                {user.superId && <Select
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  style={{ width: "200px" }}
+                  disabled
+                  defaultValue={user.superId}
+                >
+                  <MenuItem value={user.superId} selected>{user.superName}</MenuItem>
+                </Select>}
+              </Stack>
+            </Grid>
           </Typography>
           {isLoading ? (
             <CustomLoading />
           ) : (
             <>
-              {user.days.includes(todayDateSelected) ? (
+              {user.uid && user.days.includes(todayDateSelected) ? (
                 <SelectedCustomerDataTable
                   todayDateSelected={todayDateSelected}
                   userId={user.uid}
-                  isAdmin={false}
+                  isAdmin={true}
                 />
               ) : (
                 <Box mt={5}>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    fullWidth
-                    onClick={newEntry}
-                  >
-                    اضافة يوم جديد
-                  </Button>
-                  {errorNoCustomer && (
-                    <div style={{ color: "red" }}>
-                      <CustomAlert severity="error">
-                        {" "}
-                        {
-                          "لا يمكن اضافه يوم جديد بسبب عدم وجود زبائن معرفين لهذا اليوم"
-                        }{" "}
-                      </CustomAlert>
-                    </div>
-                  )}
+                  {user.uid && <div style={{ color: "red" }}>
+                    {"لا يوجد بيانات لهذا اليوم لليوزر الذي تم اختياره"}{" "}
+                  </div>}
                 </Box>
               )}
             </>
           )}
         </Box>
-        <Sidebar
-          datePickerValue={datePickerValue}
-          setDatePickerValue={setDatePickerValue}
-        />
+        <div className="hide">
+          <Sidebar
+            datePickerValue={datePickerValue}
+            setDatePickerValue={setDatePickerValue}
+          />
+        </div>
       </Box>
     </>
   );
 };
 
-export default Home;
+export default SupervisorHome;
